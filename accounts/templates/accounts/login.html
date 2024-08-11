@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 20px;
+      }
+      .login-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        text-align: center;
+        color: #333;
+      }
+      .error {
+        color: red;
+        margin-bottom: 10px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+      }
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      .forgot-password {
+        text-align: center;
+        margin-top: 10px;
+      }
+      .forgot-password a {
+        color: #007bff;
+        text-decoration: none;
+      }
+      .forgot-password a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <h2>Login</h2>
+      <form method="POST" action="">
+        {% csrf_token %}
+
+        <!-- Display error messages -->
+        {% if messages %}
+        <div class="error">
+          {% for message in messages %}
+          <p>{{ message }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <div>
+          <label for="username">Username or Email</label>
+          <input type="text" id="username" name="username" required />
+        </div>
+
+        <div>
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+          <button type="button" id="toggle-password">Show</button>
+        </div>
+
+        <button type="submit">Login</button>
+      </form>
+      <div class="forgot-password">
+        <p><a href="{% url 'password_reset' %}">Forgot Password?</a></p>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("toggle-password")
+        .addEventListener("click", function () {
+          var passwordField = document.getElementById("password");
+          if (passwordField.type === "password") {
+            passwordField.type = "text";
+            this.textContent = "Hide";
+          } else {
+            passwordField.type = "password";
+            this.textContent = "Show";
+          }
+        });
+    </script>
+  </body>
+</html>
