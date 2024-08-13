@@ -17,11 +17,25 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.http import HttpResponseRedirect
-from accounts.views import home
+from accounts.views import home, send_verification_code
+from django.contrib.auth import views as auth_views
+from main import views as main_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls')),
+    path('accounts/', home, name='home'),
     path('home/', home, name='home'),
-    path('', home),
+    path('main/', main_views.index, name='main'),
+    path('', main_views.index),
+
+    path('password_reset/', auth_views.PasswordResetView.as_view(template_name='accounts/password_reset.html'), name='password_reset'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='accounts/password_reset_done.html'), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='accounts/password_reset_confirm.html'), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='accounts/password_reset_complete.html'), name='password_reset_complete'),
+    
+    path('send_verification_code/', send_verification_code, name='send_verification_code'),
+
+    path('events/', include('events.urls')),
 ]

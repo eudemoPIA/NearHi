@@ -25,8 +25,13 @@ class RegisterForm(forms.Form):
     
     def clean_password_confirmation(self):
         password = self.cleaned_data.get('password')
-        password_confirmation = self.cleanded_data.get('password_confirmation')
+        password_confirmation = self.cleaned_data.get('password_confirmation')
         if password != password_confirmation:
             raise ValidationError("The two passwords didn't match.")
-        return password_confirmation                          
-    
+        return password_confirmation 
+                             
+    def clean_verification_code(self):
+        verification_code = self.cleaned_data.get('verification_code')
+        if len(verification_code) != 6:
+            raise ValidationError("Invalid verification code.")
+        return verification_code

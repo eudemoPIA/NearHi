@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NearHi Main Page</title>
+    <link rel="stylesheet" href="{% static 'main/style.css' %}" />
+  </head>
+  <body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar">
+      <div class="logo">
+        <img src="{% static 'images/logo.png' %}" alt="Logo" />
+      </div>
+      <div class="search-bar">
+        <input type="text" placeholder="Search events" />
+        <input type="text" placeholder="Location" class="location" />
+        <button class="search-btn">Search</button>
+      </div>
+      <ul class="nav-links">
+        <li><a href="{%url 'post_event'%}">Create Events</a></li>
+        <li><a href="#">My Events</a></li>
+        <li><a href="#">Favorites</a></li>
+        <li><a href="{% url 'home' %}">Login</a></li>
+        <li><a href="{% url 'home' %}">Sign Up</a></li>
+      </ul>
+    </nav>
+
+    <!-- Banner Section -->
+    <div class="banner">
+      <img src="{% static 'images/banner.png' %}" alt="Banner" />
+    </div>
+
+    <!-- Event Categories -->
+    <div class="categories">
+      <div class="category">
+        <a href="{% url 'filtered_events' category='Game' %}">
+          <img
+            width="80"
+            height="80"
+            src="https://img.icons8.com/dotty/80/controller.png"
+            alt="Game"
+          />
+        </a>
+      </div>
+      <div class="category">
+        <a href="{% url 'filtered_events' category='Performance' %}">
+          <img
+            width="80"
+            height="80"
+            src="https://img.icons8.com/wired/80/theatre-mask.png"
+            alt="Performance"
+          />
+        </a>
+      </div>
+      <div class="category">
+        <a href="{% url 'filtered_events' category='Nature' %}">
+          <img
+            width="80"
+            height="80"
+            src="https://img.icons8.com/wired/80/mountain.png"
+            alt="Nature"
+          />
+        </a>
+      </div>
+      <div class="category">
+        <a href="{% url 'filtered_events' category='Pet' %}">
+          <img
+            width="80"
+            height="80"
+            src="https://img.icons8.com/wired/80/pets.png"
+            alt="Pet"
+          />
+        </a>
+      </div>
+      <div class="category">
+        <a href="{% url 'filtered_events' category='Gourmet' %}">
+          <img
+            width="80"
+            height="80"
+            src="https://img.icons8.com/wired/80/food-and-wine.png"
+            alt="Gourmet"
+          />
+        </a>
+      </div>
+      <div class="category">
+        <a href="{% url 'filtered_events' category='Reading' %}">
+          <img
+            width="80"
+            height="80"
+            src="https://img.icons8.com/wired/80/bookmark--v2.png"
+            alt="Reading"
+          />
+        </a>
+      </div>
+      <div class="category">
+        <a href="{% url 'filtered_events' category='Music' %}">
+          <img
+            width="80"
+            height="80"
+            src="https://img.icons8.com/wired/80/singing-teacher.png"
+            alt="Music"
+          />
+        </a>
+      </div>
+    </div>
+
+    <!-- Event List -->
+    <div class="event-list">
+      <!-- Repeat this block for each event -->
+      <div class="event-item">
+        <img src="{% static 'images/event1.png' %}" alt="Event Image" />
+        <h3>Event Title</h3>
+        <p>Event Description</p>
+      </div>
+      <!-- Repeat ends -->
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button class="page-btn">Previous</button>
+      <button class="page-btn">Next</button>
+    </div>
+  </body>
+</html>
