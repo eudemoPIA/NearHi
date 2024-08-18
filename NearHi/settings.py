@@ -126,7 +126,12 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'accounts.MyUser'
+AUTH_USER_MODEL = 'myapp.MyUser'
+
+AUTHENTICATION_BACKENDS = [
+    'myapp.auth_backends.EmailOrUsernameBackend',  
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
