@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
-from .models import MyUser
+from .models import MyUser, Event
 import re
 
 class LoginForm(AuthenticationForm):
@@ -41,6 +41,35 @@ class SignUpForm(forms.Form):
             raise ValidationError("The two passwords didn't match.")
 
 class EventForm(forms.ModelForm):
-    
+    class Meta:
+        model = Event
+        fields = [
+            'title',
+            'description',
+            'event_time',
+            'location',
+            'image',
+            'category',
+            'fee',
+            'max_participants'
+        ]
+
+        widgets = {
+            'event_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'description': forms.Textarea(attrs={'rows':4}),
+            'category': forms.Select(),
+            'fee': forms.NumberInput(attrs={'step': '0.01'}),
+        }
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        if not image:
+            raise forms.ValidationError('Please upload the image of the event！')
+        return image
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = MyUser
+        fields = ['hobbies', 'bio', 'profile_picture', 'city']
 
 

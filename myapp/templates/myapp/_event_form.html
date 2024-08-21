@@ -1,0 +1,75 @@
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+  
+    <!-- Title -->
+    <div>
+      <label for="{{ form.title.id_for_label }}">Title:</label>
+      {{ form.title }}
+      {% if form.title.errors %}
+        <div class="error">{{ form.title.errors }}</div>
+      {% endif %}
+    </div>
+  
+    <!-- Event Time -->
+    <div>
+        <label for="{{ form.event_time.id_for_label }}">Event Time:</label>
+        {{ form.event_time }}
+        {% if form.event_time.errors %}
+          <div class="error">{{ form.event_time.errors }}</div>
+        {% endif %}
+      </div>
+      
+    <!-- Location -->
+    <div>
+        <label for="id_location">Location:</label>
+        <input id="id_location" type="text" name="location" placeholder="Enter a location" value="{{ form.location.value|default:'' }}">
+    </div>
+    
+    <!-- Description -->
+    <div>
+      <label for="{{ form.description.id_for_label }}">Description:</label>
+      {{ form.description }}
+      {% if form.description.errors %}
+        <div class="error">{{ form.description.errors }}</div>
+      {% endif %}
+    </div>
+    
+    <!-- Image Upload -->
+    <div>
+      <label for="{{ form.image.id_for_label }}">Upload an Image:</label>
+      {{ form.image }}
+      {% if form.image.errors %}
+        <div class="error">{{ form.image.errors }}</div>
+      {% endif %}
+    </div>
+    
+    <!-- Category -->
+    <div>
+      <label for="{{ form.category.id_for_label }}">Category:</label>
+      {{ form.category }}
+      {% if form.category.errors %}
+        <div class="error">{{ form.category.errors }}</div>
+      {% endif %}
+    </div>
+    
+    <!-- Fee -->
+    <div>
+      <label for="{{ form.fee.id_for_label }}">Fee (£):</label>
+      {{ form.fee }}
+      {% if form.fee.errors %}
+        <div class="error">{{ form.fee.errors }}</div>
+      {% endif %}
+    </div>
+    
+    <!-- Max Participants -->
+    <div>
+      <label for="{{ form.max_participants.id_for_label }}">Max Participants:</label>
+      {{ form.max_participants }}
+      {% if form.max_participants.errors %}
+        <div class="error">{{ form.max_participants.errors }}</div>
+      {% endif %}
+    </div>
+    
+    <button type="submit">{{ submit_button_text }}</button>
+  </form>
+  

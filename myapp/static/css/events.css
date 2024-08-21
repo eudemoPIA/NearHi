@@ -1,0 +1,207 @@
+/* 通用样式 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 导航栏样式 */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo a {
+    display: inline-block;
+}
+
+.logo img {
+    height: 50px;
+    cursor: pointer;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.search-bar input[type="text"] {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+.search-bar button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-bar button:hover {
+    background-color: #0056b3;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+.nav-links li {
+    margin: 0 15px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #007bff;
+}
+
+/* 事件列表样式 */
+.event-list-container {
+    padding: 20px;
+}
+
+.event-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.event-card {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-radius: 10px;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.event-card h3 {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.event-card p {
+    color: #666;
+    font-size: 14px;
+}
+
+.event-card .cancel-save-btn {
+    margin-top: 15px;
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.event-card .cancel-save-btn:hover {
+    background-color: #0056b3;
+}
+
+/* 适用于 upcoming_events 的按钮样式 */
+.event-card .cancel-apply-btn {
+    margin-top: 15px;
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.event-card .cancel-apply-btn:hover {
+    background-color: #0056b3;
+}
+
+/* 适用于 my_events 的按钮样式 */
+.event-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.event-actions .edit-btn, .event-actions .delete-btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    color: white;
+}
+
+/* 编辑按钮 */
+.event-actions .edit-btn {
+    background-color: #007bff;
+}
+
+.event-actions .edit-btn:hover {
+    background-color: #0056b3;
+}
+
+/* 删除按钮 */
+.event-actions .delete-btn {
+    background-color: #dc3545;
+}
+
+.event-actions .delete-btn:hover {
+    background-color: #c82333;
+}
+
+
+
+/* 分页按钮样式 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.page-btn {
+    padding: 10px 20px;
+    margin: 0 5px;
+    background-color: #ff5000;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.page-btn:hover {
+    background-color: #e04800;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.page-btn.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

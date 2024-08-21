@@ -1,0 +1,179 @@
+/* 通用样式 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 导航栏样式 */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: white;
+}
+
+.logo a {
+    display: inline-block;
+}
+
+.logo img {
+    height: 50px; /* 保持原有高度 */
+    cursor: pointer; /* 鼠标悬停时显示手形指针 */
+}
+
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.search-bar .form-control {
+    border-radius: 30px;
+}
+
+.search-bar .input-group-append .btn {
+    border-radius: 0 30px 30px 0;
+}
+
+.input-group-text {
+    background-color: white;
+    border: none;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+.nav-links li {
+    margin: 0 15px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+/* Banner样式 */
+.banner img {
+    width: 100%;
+    height: auto;
+}
+
+/* 类别样式 */
+.categories {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+    gap: 30px;
+}
+
+.category {
+    width: 80px;
+    height: 80px;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #ccc;
+}
+
+.category img {
+    width: 50px;
+    height: 50px;
+}
+
+/* 事件列表样式 */
+.event-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    padding: 20px;
+}
+
+.event-item {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    width: 100%;
+    max-width: 250px; /* 设置最大宽度 */
+    min-width: 220px; /* 设置最小宽度 */
+    height: 350px;
+}
+
+.event-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15); /* 增加悬停时的阴影效果 */
+}
+
+.event-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    margin-bottom: 15px;
+    background-color: #f0f0f0;
+}
+
+.event-item img::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/loading-spinner.gif'); /* 相对路径 */
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
+.event-item h3 {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.event-item p {
+    color: #666;
+    font-size: 14px;
+}
+
+/* 分页按钮样式 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.page-btn {
+    padding: 10px 20px;
+    margin: 0 5px;
+    background-color: #ff5000;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.page-btn:hover {
+    background-color: #e04800;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.page-btn.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

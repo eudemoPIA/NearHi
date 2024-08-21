@@ -1,0 +1,38 @@
+.form.signup .input-field button.send-code-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #cc3d00;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.send-code-button:hover {
+    background-color: #b33a00;
+}
+
+.form.signup .input-field .countdown {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #d9534f;
+    font-size: 14px;
+}
+
+.send-code-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  
+  .countdown {
+    font-size: 14px;
+    color: #d9534f;
+  }
+  

@@ -1,16 +1,18 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+import json
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import LoginForm
-from .forms import SignUpForm
-from .models import MyUser
+from .forms import LoginForm, SignUpForm, EventForm, ProfileForm
+from .models import MyUser, Event
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.http import JsonResponse
 import random
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator,  PageNotAnInteger, EmptyPage
 
 
-def log_in(request):
+def login_view(request):
     if request.method == "POST":
         usernm = request.POST.get("username")
         passwd = request.POST.get("password")
@@ -19,15 +21,15 @@ def log_in(request):
 
         if user is not None:
             login(request, user)
-            return redirect("/myapp") #aaa
+            return redirect("homepage")
         else:
             messages.error(request, "Invalid username or email, or incorrect password. Please try again.")
-            return redirect("/myapp/login?state=loginfail") #aaa
+            return redirect('login') 
     else:
         form = LoginForm()
 
     return render(request, "myapp/login.html", {"form": form})
-        #aaa
+        
 
 def signup_view(request):
     if request.method == 'POST':
@@ -48,20 +50,44 @@ def signup_view(request):
                     password = form.cleaned_data['password']
                     user = MyUser.objects.create_user(username=username, email=email, password=password)
                     user.save()
+
                     messages.success(request, 'Sign up successful!')
-                    return redirect('home') #aaa
+                    return redirect('login') 
         else:
             messages.error(request, 'Please correct the errors below.')
-        return render(request, 'signup.html', {'form': form})
+        return render(request, 'myapp/signup.html', {'form': form}) 
 
     else:
         form = SignUpForm()
 
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'myapp/signup.html', {'form': form}) #渲染空的注册页面
+
+def profile_view(request):
+    is_editing = request.GET.get('edit', False)
+    if request.method =='POST':
+        form = ProfileForm(request.POST, request.FILES,instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+        else:
+            return render(request, 'myapp/profile.html', {'form': form, 'user': request.user, 'errors': form.errors})
+    else:
+        form = ProfileForm(instance=request.user)
+    return render(request, 'profile.html', {
+        'form': form, 
+        'user': request.user,
+        'is_editing': is_editing})
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
 def send_verification_code(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
+        print(request.body)
+        # email = request.POST.get('email')
+        data = json.loads(request.body)
+        email = data.get("email")
         if email:
             code = random.randint(100000, 999999) 
 
@@ -79,3 +105,145 @@ def send_verification_code(request):
             return JsonResponse({'status': 'ok', 'message': 'Verification code sent'})
         return JsonResponse({'status': 'error', 'message': 'Invalid email'})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+@login_required(login_url='login') #跳到登录
+def create_event(request):
+    if request.method =='POST':
+        form = EventForm(request.POST, request.FILES)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.created_by = request.user
+            event.save()
+            return redirect('event_detail', pk=event.id) #跳到event detail页面
+        
+    else:
+        form = EventForm()
+
+    return render(request, 'myapp/create_event.html', {'form': form}) #渲染空的create event表单
+
+def event_detail(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+    return render(request, 'myapp/event_detail.html', {'event': event})
+
+@login_required(login_url='login')
+def toggle_favorite(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+    if request.user in event.saved_by_users.all():
+        event.saved_by_users.remove(request.user) #remove it from saved events
+        is_favorite = False
+    else:
+        event.saved_by_users.add(request.user)
+        is_favorite = True
+    return JsonResponse({'is_favorite': is_favorite})
+
+@login_required(login_url='login')
+def apply_event(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+    if request.user in event.applied_by_users.all():
+        event.applied_by_users.remove(request.user)
+        applied = False
+    else:
+        event.applied_by_users.add(request.user)
+        event.update_current_participants()
+        applied = True
+    return JsonResponse({'applied': applied})
+
+def paginate_events(request, events_list, per_page=8):
+    paginator = Paginator(events_list, per_page)
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)  # if page not integer，show page 1
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)  # if page out of range, show the last page
+    
+    return page_obj
+
+def homepage(request, category=None):
+    events = Event.objects.all()
+
+    search_query = request.GET.get('search_query')
+    location_query = request.GET.get('location')
+    category = request.GET.get('category')
+
+    if search_query:
+        events = events.filter(title__icontains=search_query)
+    if location_query:
+        events = events.filter(location__icontains=location_query)
+    if category:
+        events = events.filter(category__iexact=category)
+    
+    page_obj = paginate_events(request, events)
+
+    return render(request, 'myapp/homepage.html', {
+        'page_obj': page_obj,
+        'search_query': search_query,
+        'location_query': location_query,
+        'category': category,
+    })
+
+
+@login_required(login_url='login')
+def saved_events(request):
+    page_obj = paginate_events(request, request.user.saved_events.all())
+    return render(request, 'myapp/saved_events.html', {'page_obj': page_obj})
+
+@login_required(login_url='login')
+def upcoming_events(request):
+    page_obj = paginate_events(request, request.user.upcoming_events.all())
+    return render(request, 'myapp/upcoming_events.html', {'page_obj': page_obj})
+
+@login_required(login_url='login')
+def my_events(request):
+    page_obj = paginate_events(request, Event.objects.filter(created_by=request.user))
+    return render(request, 'myapp/my_events.html', {'page_obj': page_obj})
+
+@login_required(login_url='login')
+def edit_event(request, event_id):
+    event = get_object_or_404(Event, id=event_id, created_by=request.user)
+    if request.method == "POST":
+        form = EventForm(request.POST, request.FILES, instance=event)
+        if form.is_valid():
+            form.save()
+            return redirect('myapp/event_detail', event_id=event.id)
+    else:
+        form = EventForm(instance=event)
+    return render(request, 'edit_event.html', {'form': form})
+
+@login_required(login_url='login')
+def delete_event(request, event_id):
+    event = get_object_or_404(Event, id=event_id, created_by=request.user)
+    if request.method == "POST":
+        event.delete()
+        return JsonResponse({"success": True, "message": "Event deleted successfully."}, status=200)
+    return JsonResponse({"success": False, "message": "Invalid request."}, status=400)
+
+@login_required(login_url='login')
+def saved_events(request):
+    user = request.user
+    saved_events_list = user.saved_events.all()
+    return render(request, 'saved_events.html', {'events': saved_events_list})
+
+@login_required(login_url='login')
+def cancel_collection(request, event_id):
+    if request.method == 'POST':
+        event = get_object_or_404(Event, id=event_id)
+        request.user.saved_events.remove(event)
+        return JsonResponse({'status': 'success', 'message': 'Event removed from saved events'})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
+@login_required(login_url='login')
+def upcoming_events(request):
+    user = request.user
+    upcoming_events_list = user.upcoming_events.all()
+    return render(request, 'upcoming_events.html', {'events': upcoming_events_list})
+
+@login_required(login_url='login')
+def cancel_application(request, event_id):
+    if request.method == 'POST':
+        event = get_object_or_404(Event, id=event_id)
+        request.user.upcoming_events.remove(event)
+        return JsonResponse({'status': 'success', 'message': 'You have canceled the application'})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+

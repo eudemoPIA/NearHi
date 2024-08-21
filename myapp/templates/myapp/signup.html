@@ -1,77 +1,128 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <!-- ===== Iconscout CSS ===== -->
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
 
     <!-- ===== CSS ===== -->
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-         
-    <title>Signup Form</title> 
-</head>
-<body>
+    <link rel="stylesheet" href="{% static 'css/login-signup.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/signup_extra.css' %}" />
+
+    <title>Signup Form</title>
+  </head>
+  <body>
     <div class="container">
-        <div class="forms">
-            <div class="form signup">
-                <span class="title">Registration</span>
+      <div class="forms">
+        <div class="form signup">
+          <span class="title">Registration</span>
 
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="input-field">
-                        <input type="text" name="username" placeholder="Enter your username" required>
-                        <i class="uil uil-user"></i>
-                    </div>
-
-                    <div class="input-field">
-                        <input type="text" name="email" placeholder="Enter your email" required>
-                        <i class="uil uil-envelope icon"></i>
-                        <button type="button" id="send-code" class="send-code-button">Send Code</button>
-                        <span id="countdown" class="countdown"></span>
-                    </div>
-
-                    <div class="input-field">
-                        <input type="text" name="verification code" placeholder="Enter the verification code that you've just received." required>
-                        <i class="uil uil-lock icon"></i>
-                    </div>
-
-                    <div class="input-field">
-                        <input type="password" name="password1" class="password" placeholder="Create a password" required>
-                        <i class="uil uil-lock icon"></i>
-                        <i class="uil uil-eye-slash showHidePw"></i>
-                    </div>
-
-                    <div class="input-field">
-                        <input type="password" name="password2" class="password" placeholder="Confirm your password" required>
-                        <i class="uil uil-lock icon"></i>
-                    </div>
-
-                    <div class="checkbox-text">
-                        <div class="checkbox-content">
-                            <input type="checkbox" id="termCon">
-                            <label for="termCon" class="text">I accepted all terms and conditions</label>
-                        </div>
-                    </div>
-
-                    <div class="input-field button">
-                        <input type="submit" value="Signup">
-                    </div>
-                </form>
-
-                <div class="login-signup">
-                    <span class="text">Already a member?
-                        <a href="{% url 'login' %}" class="text login-link">Login Now</a>
-                    </span>
-                </div>
+          <form method="post">
+            {% csrf_token %}
+            <div class="input-field">
+              <input
+                type="text"
+                name="username"
+                placeholder="Enter your username"
+                required
+              />
+              <i class="uil uil-user"></i>
             </div>
+
+            <div class="input-field">
+              <input
+                type="text"
+                name="email"
+                placeholder="Enter your email"
+                required
+              />
+              <i class="uil uil-envelope icon"></i>
+              <div class="send-code-container">
+                <button
+                  type="button"
+                  id="send-code"
+                  class="send-code-button"
+                  style="display: inline"
+                >
+                  Send Code
+                </button>
+                <span
+                  id="countdown"
+                  class="countdown"
+                  style="display: none"
+                ></span>
+              </div>
+            </div>
+
+            <div class="input-field">
+              <input
+                type="text"
+                name="verification_code"
+                placeholder="Enter the verification code"
+                required
+              />
+              <i class="uil uil-lock icon"></i>
+            </div>
+
+            <div class="input-field">
+              <input
+                type="password"
+                name="password1"
+                class="password"
+                placeholder="Create a password"
+                required
+              />
+              <i class="uil uil-lock icon"></i>
+              <i class="uil uil-eye-slash showHidePw"></i>
+            </div>
+
+            <div class="input-field">
+              <input
+                type="password"
+                name="password2"
+                class="password"
+                placeholder="Confirm your password"
+                required
+              />
+              <i class="uil uil-lock icon"></i>
+            </div>
+
+            <div class="checkbox-text">
+              <div class="checkbox-content">
+                <input type="checkbox" id="termCon" />
+                <label for="termCon" class="text"
+                  >I accepted all terms and conditions</label
+                >
+              </div>
+            </div>
+
+            <div class="input-field button">
+              <input type="submit" value="Signup" />
+            </div>
+          </form>
+
+          <div class="login-signup">
+            <span class="text"
+              >Already a member?
+              <a href="{% url 'login' %}" class="text login-link">Login Now</a>
+            </span>
+          </div>
         </div>
+      </div>
     </div>
 
+    <script>
+      const sendCodeUrl = "{% url 'send_verification_code' %}";
+      const csrfToken = "{{ csrf_token }}";
+    </script>
     <script src="{% static 'js/signup.js' %}"></script>
-    <script src="{% static 'js/password-toggle.js' %}"></script> 
-</body>
+    <script src="{% static 'js/password-toggle.js' %}"></script>
+  </body>
 </html>

@@ -5,10 +5,10 @@ document.addEventListener('DOMContentLoaded', function () {
     let interval;
 
     sendCodeButton.addEventListener('click', function () {
-        fetch("{% url 'send_verification_code' %}", {
+        fetch('http://127.0.0.1:8000/send-code/', {
             method: 'POST',
             headers: {
-                'X-CSRFToken': '{{ csrf_token }}',
+                'X-CSRFToken': csrfToken,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -16,22 +16,27 @@ document.addEventListener('DOMContentLoaded', function () {
             })
         }).then(response => response.json()).then(data => {
             if (data.status === 'ok') {
-                sendCodeButton.disabled = true;
+                sendCodeButton.style.display = 'none';
+                countdownElement.style.display = 'inline';
                 countdownElement.textContent = `Resend in ${countdown}s`;
+
                 interval = setInterval(() => {
                     countdown--;
                     if (countdown > 0) {
                         countdownElement.textContent = `Resend in ${countdown}s`;
                     } else {
                         clearInterval(interval);
-                        sendCodeButton.disabled = false;
-                        countdownElement.textContent = '';
+                        sendCodeButton.style.display = 'inline'; 
+                        countdownElement.style.display = 'none';
                         countdown = 60; 
                     }
                 }, 1000);
             } else {
                 alert(data.message);
             }
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('Failed to send verification code. Please try again.');
         });
     });
 });

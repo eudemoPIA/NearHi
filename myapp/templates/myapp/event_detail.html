@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ event.title }} - Event Detail</title>
+    <link rel="stylesheet" href="{% static 'css/event_detail.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="event-detail-container">
+        <!-- 图片区域 -->
+        <div class="image-container">
+            <img src="{{ event.image.url }}" alt="Event Image">
+            <a href="{% url 'homepage' %}" class="btn-back">Back to Homepage</a>
+            <button id="favorite-button" onclick="toggleFavorite({{ event.id }})">
+                <i class="far fa-heart"></i> <!-- 初始空心 -->
+            </button>
+        </div>
+
+        <!-- 事件信息 -->
+        <div class="event-info">
+            <h1>{{ event.title }}</h1>
+            <p><strong>Time:</strong> {{ event.event_time }}</p>
+            <p><strong>Location:</strong> {{ event.location }}</p>
+            <p><strong>Category:</strong> {{ event.get_category_display }}</p>
+            <p><strong>Description:</strong> {{ event.description }}</p>
+            <p><strong>Fee:</strong> £{{ event.fee }}</p>
+            <p><strong>Max Participants:</strong> {{ event.max_participants }}</p>
+            <p><strong>Current Participants:</strong> {{ event.current_participants }}</p>
+        </div>
+
+        <!-- 申请按钮 -->
+        <div class="apply-container">
+            <button id="apply-button" onclick="applyEvent({{ event.id }})">Apply</button>
+        </div>
+    </div>
+
+    <!-- 引入 JavaScript 文件 -->
+    <script src="{% static 'js/event_detail.js' %}"></script>
+</body>
+</html>

@@ -38,9 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts',
-    'main',
-    'events',
+    'myapp',
 ]
 
 MIDDLEWARE = [
@@ -133,11 +131,17 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'zhang0129pia@gmail.com'
-EMAIL_HOST_PASSWORD = 'zm129129zm'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_PORT = 587
+#EMAIL_USE_TLS = True
+#EMAIL_HOST_USER = 'zhang0129pia@gmail.com'
+#EMAIL_HOST_PASSWORD = 'zm129129zm'
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR , 'media')
+
 
 
