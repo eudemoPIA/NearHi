@@ -1,0 +1,54 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NearHi</title>
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- 引入 Font Awesome -->
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">
+      <a href="{% url 'homepage' %}">
+        <img src="{% static 'images/logo.png' %}" alt="NearHi" />
+    </div>
+        
+    <div class="search-bar">
+      <form method="GET" action="{% url 'search_results' %}">
+          <div class="search-icon">
+              <i class="fas fa-search"></i>
+          </div>
+          <input type="text" class="search_input" name="search_query" placeholder="Search events" value="{{ search_query }}" id="keyword">
+          <div class="divider"></div>
+          <div class="location-icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>  
+          <input type="text" class="location-input" name="location" placeholder="Enter location" value="{{ location_query }}" id="location-picker" >
+          <button class="search-button" type="submit">
+              <i class="fas fa-search"></i>
+           </button>    
+      </form>
+    </div>
+        
+    <ul class="nav-links">
+      <li><a href="{%url 'create_event'%}">Create Events</a></li>
+      <li><a href="{%url 'my_events'%}">My Events</a></li>
+      <li><a href="{% url 'saved_events' %}">Saved Events</a>
+      <li><a href="{% url 'upcoming_events' %}">Upcoming Events</a>
+
+      {% if user.is_authenticated %}
+          <li><a href="{% url 'profile' %}">Profile</a></li>
+          <li><a href="{% url 'logout' %}">Logout</a></li>
+      {% else %}
+          <li><a href="{% url 'login' %}">Login</a></li>
+          <li><a href="{% url 'signup' %}">Sign Up</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+  
+  <div class="content">
+    {% block content %}
+    {% endblock %}
+  </div>
+</body>
+</html>

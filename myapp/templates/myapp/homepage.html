@@ -31,13 +31,9 @@
       <ul class="nav-links">
         <li><a href="{%url 'create_event'%}">Create Events</a></li>
         <li><a href="{%url 'my_events'%}">My Events</a></li>
-        <div class="favorites-menu">
-            <button class="dropdown-button">Favorites</button>
-            <div class="dropdown-content">
-                <a href="{% url 'saved_events' %}">Saved Events</a>
-                <a href="{% url 'upcoming_events' %}">Upcoming Events</a>
-            </div>
-        </div>
+        <li><a href="{% url 'saved_events' %}">Saved Events</a>
+        <li><a href="{% url 'upcoming_events' %}">Upcoming Events</a>
+
         {% if user.is_authenticated %}
             <li><a href="{% url 'profile' %}">Profile</a></li>
             <li><a href="{% url 'logout' %}">Logout</a></li>
@@ -153,7 +149,7 @@
         <!-- Pagination Controls -->
         <div class="pagination">
             {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}&search_query={{ search_query }}&location={{ location_query }}&category={{ category }}" class="arrow">Previous</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="arrow">Previous</a>
             {% else %}
             <span class="arrow disabled">Previous</span>
             {% endif %}  
@@ -162,12 +158,12 @@
                 {% if page_obj.number == num %}
                     <span class="current-page">{{ num }}</span>
                 {% else %}
-                <a href="?page={{ num }}&search_query={{ search_query }}&location={{ location_query }}&category={{ category }}">{{ num }}</a>
+                <a href="?page={{ num }}">{{ num }}</a>
                 {% endif %}
             {% endfor %}
 
             {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}&search_query={{ search_query }}&location={{ location_query }}&category={{ category }}" class="arrow">Next</a>
+            <a href="?page={{ page_obj.next_page_number }}" class="arrow">Next</a>
             {% else %}
                 <span class="arrow disabled">Next</span>
             {% endif %}

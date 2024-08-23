@@ -1,0 +1,50 @@
+<!-- event_list.html -->
+<div class="event-list-container">
+    <div class="event-list">
+      {% block event_cards %}
+      {% for event in page_obj %}
+      <div class="event-card">
+        <a href="{{ event.get_absolute_url }}">
+          <img src="{{ event.image.url }}" alt="{{ event.title }}">
+          <h3>{{ event.title }}</h3>
+          <p>{{ event.event_time|date:"F j, Y, g:i a" }}</p>
+          <p>{{ event.location }}</p>
+          <p>{{ event.current_participants }} participants</p>
+        </a>
+      </div>
+      {% endfor %}
+      {% endblock %}
+    </div>
+    <!-- Pagination Controls -->
+    {% block pagination %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+        <button onclick="window.location.href='?page={{ page_obj.previous_page_number }}'" class="btn btn-primary">Previous</button>
+        {% else %}
+        <button class="pagination-btn" disabled>Previous</button>
+        {% endif %}
+    
+        {% if page_obj.has_next %}
+        <button onclick="window.location.href='?page={{ page_obj.next_page_number }}'" class="btn btn-primary">Next</button>
+        {% else %}
+        <button class="pagination-btn" disabled>Next</button>
+        {% endif %}
+    </div>
+    {% endblock %}    
+</div>
+
+<!-- browser history control and AJAX paginate-->
+<script src="{% static 'js/pagination.js' %}"></script>
+
+<!-- GIF before event card image loaded-->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const imgElements = document.querySelectorAll('.event-card img');  
+      imgElements.forEach(img => {
+          img.addEventListener('load', () => {
+              img.classList.add('loaded');
+          });
+    });
+  });
+</script>
+  

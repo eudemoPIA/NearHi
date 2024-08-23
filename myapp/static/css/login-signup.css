@@ -147,15 +147,12 @@ body {
 }
 
 /* ===== Checkbox Styles (Used in both Login and Signup) ===== */
+
 .checkbox-content input {
     margin-right: 10px;
     accent-color: #cc3d00;
 }
 
-.checkbox-content label {
-    font-size: 14px;
-    color: #333;
-}
 
 /* ===== Responsive Media Queries ===== */
 @media (max-width: 600px) {

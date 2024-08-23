@@ -1,6 +1,7 @@
 {% load static %}
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/events.css' %}">
+<!DOCTYPE html>
 
 {% block content %}
 <!-- Navigator bar -->
@@ -60,7 +61,7 @@
             </a>
             <!-- Cancel the application -->
             <div class="event-actions">
-                <button class="cancel-save-btn" data-event-id="{{ event.id }}">Cancel Application</button>
+                <button class="cancel-application-btn" data-event-id="{{ event.id }}">Cancel Application</button>
             </div>
         </div>
         {% endfor %}

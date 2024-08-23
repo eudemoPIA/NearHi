@@ -2,6 +2,7 @@ import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.db.models import Q
 from .forms import LoginForm, SignUpForm, EventForm, ProfileForm
 from .models import MyUser, Event
 from django.utils import timezone
@@ -37,12 +38,13 @@ def signup_view(request):
         if form.is_valid():
             stored_code = request.session.get('verification_code')
             code_sent_at = request.session.get('code_sent_at')
+            print(stored_code, code_sent_at, form.cleaned_data['verification_code'])
 
             if stored_code and code_sent_at:
                 elapsed_time = timezone.now().timestamp() - code_sent_at
-                if elapsed_time > 600:
+                if elapsed_time > 6000:
                     form.add_error('verification_code', 'Verification code has expired.')
-                elif stored_code != form.cleaned_data['verification_code']:
+                elif str(stored_code) != str(form.cleaned_data['verification_code']):
                     form.add_error('verification_code', 'Invalid verification code.')
                 else:
                     username = form.cleaned_data['username']
@@ -55,32 +57,13 @@ def signup_view(request):
                     return redirect('login') 
         else:
             messages.error(request, 'Please correct the errors below.')
+        print(form.errors)
         return render(request, 'myapp/signup.html', {'form': form}) 
 
     else:
         form = SignUpForm()
 
-    return render(request, 'myapp/signup.html', {'form': form}) #渲染空的注册页面
-
-def profile_view(request):
-    is_editing = request.GET.get('edit', False)
-    if request.method =='POST':
-        form = ProfileForm(request.POST, request.FILES,instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('profile')
-        else:
-            return render(request, 'myapp/profile.html', {'form': form, 'user': request.user, 'errors': form.errors})
-    else:
-        form = ProfileForm(instance=request.user)
-    return render(request, 'profile.html', {
-        'form': form, 
-        'user': request.user,
-        'is_editing': is_editing})
-
-def logout_view(request):
-    logout(request)
-    return redirect('login')
+    return render(request, 'myapp/signup.html', {'form': form})
 
 def send_verification_code(request):
     if request.method == 'POST':
@@ -106,7 +89,28 @@ def send_verification_code(request):
         return JsonResponse({'status': 'error', 'message': 'Invalid email'})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
-@login_required(login_url='login') #跳到登录
+def custom_logout_view(request):
+    logout(request)
+    return redirect('homepage')
+
+def profile_view(request):
+    is_editing = request.GET.get('edit', False)
+    if request.method =='POST':
+        form = ProfileForm(request.POST, request.FILES,instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+        else:
+            return render(request, 'myapp/profile.html', {'form': form, 'user': request.user, 'errors': form.errors})
+    else:
+        form = ProfileForm(instance=request.user)
+    return render(request, 'profile.html', {
+        'form': form, 
+        'user': request.user,
+        'is_editing': is_editing})
+
+
+@login_required(login_url='login') 
 def create_event(request):
     if request.method =='POST':
         form = EventForm(request.POST, request.FILES)
@@ -121,9 +125,11 @@ def create_event(request):
 
     return render(request, 'myapp/create_event.html', {'form': form}) #渲染空的create event表单
 
+
 def event_detail(request, pk):
     event = get_object_or_404(Event, pk=pk)
     return render(request, 'myapp/event_detail.html', {'event': event})
+
 
 @login_required(login_url='login')
 def toggle_favorite(request, pk):
@@ -135,6 +141,7 @@ def toggle_favorite(request, pk):
         event.saved_by_users.add(request.user)
         is_favorite = True
     return JsonResponse({'is_favorite': is_favorite})
+
 
 @login_required(login_url='login')
 def apply_event(request, pk):
@@ -148,6 +155,7 @@ def apply_event(request, pk):
         applied = True
     return JsonResponse({'applied': applied})
 
+
 def paginate_events(request, events_list, per_page=8):
     paginator = Paginator(events_list, per_page)
     page_number = request.GET.get('page')
@@ -160,44 +168,56 @@ def paginate_events(request, events_list, per_page=8):
     
     return page_obj
 
-def homepage(request, category=None):
+
+def homepage(request):
     events = Event.objects.all()
-
-    search_query = request.GET.get('search_query')
-    location_query = request.GET.get('location')
-    category = request.GET.get('category')
-
-    if search_query:
-        events = events.filter(title__icontains=search_query)
-    if location_query:
-        events = events.filter(location__icontains=location_query)
-    if category:
-        events = events.filter(category__iexact=category)
-    
     page_obj = paginate_events(request, events)
-
     return render(request, 'myapp/homepage.html', {
         'page_obj': page_obj,
-        'search_query': search_query,
-        'location_query': location_query,
+    })
+
+
+def search_results(request):
+    search_query = request.GET.get('search_query')
+    location_query = request.GET.get('location')
+
+    events = Event.objects.filter(
+        Q(title__icontains=search_query) & 
+        Q(location__icontains=location_query)
+    )
+    
+    page_obj = paginate_events(request, events)
+    return render(request, 'myapp/search_results.html', {'page_obj': page_obj})
+
+
+def filtered_events(request, category):
+    events = Event.object.filter(category__iexact=category)
+    page_obj = paginate_events(request, events)
+    return render(request, 'myapp/filtered_events.html', {
+        'page_obj': page_obj,
         'category': category,
     })
 
 
 @login_required(login_url='login')
 def saved_events(request):
+    print("Accessing saved_events view") 
     page_obj = paginate_events(request, request.user.saved_events.all())
     return render(request, 'myapp/saved_events.html', {'page_obj': page_obj})
 
+
 @login_required(login_url='login')
 def upcoming_events(request):
+    print("Accessing upcoming_events view")
     page_obj = paginate_events(request, request.user.upcoming_events.all())
     return render(request, 'myapp/upcoming_events.html', {'page_obj': page_obj})
+
 
 @login_required(login_url='login')
 def my_events(request):
     page_obj = paginate_events(request, Event.objects.filter(created_by=request.user))
     return render(request, 'myapp/my_events.html', {'page_obj': page_obj})
+
 
 @login_required(login_url='login')
 def edit_event(request, event_id):
@@ -211,6 +231,7 @@ def edit_event(request, event_id):
         form = EventForm(instance=event)
     return render(request, 'edit_event.html', {'form': form})
 
+
 @login_required(login_url='login')
 def delete_event(request, event_id):
     event = get_object_or_404(Event, id=event_id, created_by=request.user)
@@ -219,11 +240,13 @@ def delete_event(request, event_id):
         return JsonResponse({"success": True, "message": "Event deleted successfully."}, status=200)
     return JsonResponse({"success": False, "message": "Invalid request."}, status=400)
 
+
 @login_required(login_url='login')
 def saved_events(request):
     user = request.user
     saved_events_list = user.saved_events.all()
     return render(request, 'saved_events.html', {'events': saved_events_list})
+
 
 @login_required(login_url='login')
 def cancel_collection(request, event_id):
@@ -233,11 +256,13 @@ def cancel_collection(request, event_id):
         return JsonResponse({'status': 'success', 'message': 'Event removed from saved events'})
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
+
 @login_required(login_url='login')
 def upcoming_events(request):
     user = request.user
     upcoming_events_list = user.upcoming_events.all()
     return render(request, 'upcoming_events.html', {'events': upcoming_events_list})
+
 
 @login_required(login_url='login')
 def cancel_application(request, event_id):

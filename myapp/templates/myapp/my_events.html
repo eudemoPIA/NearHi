@@ -1,6 +1,7 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/events.css' %}">
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<!DOCTYPE html>
 
 {% block content %}
 <!-- Navigator bar -->
@@ -61,8 +62,8 @@
             </a>
             <!-- Add Edit and Delete buttons below the event card -->
             <div class="event-actions">
-                <a href="{% url 'edit_event' event.id %}" class="btn btn-primary">Edit</a>
-                <button class="action-btn" data-action-type="delete_event" data-event-id="{{ event.id }}" class="btn btn-danger">Delete</button>
+                <a href="{% url 'edit_event' event.id %}" class="edit-action-btn">Edit</a>
+                <button class="delete-action-btn" data-action-type="delete_event" data-event-id="{{ event.id }}" class="btn btn-danger">Delete</button>
             </div>
         </div>
         {% endfor %}

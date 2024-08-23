@@ -1,43 +1,51 @@
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}" />
+<!DOCTYPE html>
 <div class="profile-container">
-    <!-- Edit button -->
-    <div style="position: absolute; top: 10px; right: 10px;">
-      <a href="{% url 'profile' %}?edit=true" class="btn btn-secondary">Edit</a>
-    </div>
-  
-    <!-- Name and Picture -->
-    <div class="profile-header" style="text-align: center;">
-      <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-image" style="border-radius: 50%; width: 150px; height: 150px;">
-      <h2>{{ user.username }}</h2>
-    </div>
-  
-    <!-- Information -->
-    <div class="profile-details">
-      <ul>
-        <li><strong>City:</strong> {{ user.city|default:"Not provided yet" }}</li>
-        <li><strong>Hobbies:</strong> {{ user.hobbies|default:"Not provided yet" }}</li>
-        <li><strong>Talk about yourself:</strong> {{ user.bio|default:"Not provided yet" }}</li>
-      </ul>
-    </div>
-  
-    <!-- is_editing or not -->
-    {% if is_editing %}
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for field in form %}
-          <div class="form-group">
-            {{ field.label_tag }}<br>
-            {{ field }}
-            {% if field.errors %}
-              <div class="alert alert-danger">
-                {{ field.errors }}
-              </div>
-            {% endif %}
-          </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-        <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
-      </form>
-    {% endif %}
+  <!-- Edit button -->
+  <div style="position: absolute; top: 10px; right: 10px">
+    <a href="{% url 'profile' %}?edit=true" class="btn btn-secondary">Edit</a>
   </div>
-  
+
+  <!-- Name and Picture -->
+  <div class="profile-header" style="text-align: center">
+    <img
+      src="{{ user.profile_picture.url }}"
+      alt="Profile Picture"
+      class="profile-image"
+      style="border-radius: 50%; width: 150px; height: 150px"
+    />
+    <h2>{{ user.username }}</h2>
+  </div>
+
+  <!-- Information -->
+  <div class="profile-details">
+    <ul>
+      <li><strong>City:</strong> {{ user.city|default:"Not provided yet" }}</li>
+      <li>
+        <strong>Hobbies:</strong> {{ user.hobbies|default:"Not provided yet" }}
+      </li>
+      <li>
+        <strong>Talk about yourself:</strong> {{ user.bio|default:"Not provided
+        yet" }}
+      </li>
+    </ul>
+  </div>
+
+  <!-- is_editing or not -->
+  {% if is_editing %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %} {{ form.non_field_errors }} {% for field in form %}
+    <div class="form-group">
+      {{ field.label_tag }}<br />
+      {{ field }} {% if field.errors %}
+      <div class="alert alert-danger">{{ field.errors }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+  {% endif %}
+</div>
