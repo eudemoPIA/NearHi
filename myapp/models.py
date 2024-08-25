@@ -37,8 +37,7 @@ class Event(models.Model):
     max_participants = models.PositiveIntegerField(default=1)  # 最大参与人数
     current_participants = models.PositiveIntegerField(default=0, editable=False)  # 当前参与人数，自动更新
 
-
-    def _str_(self):
+    def __str__(self):
         return self.title
     
     def update_current_participants(self):

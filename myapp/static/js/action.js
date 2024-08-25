@@ -1,37 +1,93 @@
-// 通用的确认弹窗函数
-function showConfirmationModal(actionType, eventId, successCallback) {
-    // 显示确认弹窗
-    $('#confirmationModal').modal('show');
+console.log('action.js loaded');
 
-    // 当用户点击确认按钮时
-    $('#confirmAction').off('click').on('click', function() {
-        $.ajax({
-            type: "POST",
-            url: `/your-app/${actionType}/${eventId}/`,
-            headers: {
-                'X-CSRFToken': csrftoken, // 确保 CSRF token 被正确设置
-            },
-            success: function(response) {
-                if (response.status === 'success') {
-                    successCallback(); // 在成功后执行自定义操作，例如移除活动卡片
-                    $('#confirmationModal').modal('hide'); // 关闭弹窗
-                }
-            },
-            error: function() {
-                alert('An error occurred, please try again.');
+// 获取 CSRF token 的函数
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
-        });
-    });
+        }
+    }
+    return cookieValue;
 }
 
-// 绑定事件逻辑
-$(document).ready(function() {
-    $('.action-btn').on('click', function() {
-        const actionType = $(this).data('action-type');
-        const eventId = $(this).data('event-id');
-        showConfirmationModal(actionType, eventId, function() {
-            // 成功后移除对应的活动卡片
-            $(`#event-card-${eventId}`).remove();
+// 关闭模态框
+function closeModal() {
+    document.getElementById('confirmationModal').style.display = 'none';
+}
+
+// 更新参与者数量
+function updateParticipantsCount(data) {
+    const participantCountElement = document.getElementById('current-participants');
+    if (participantCountElement) {
+        participantCountElement.innerText = `${data.current_participants} participants`;
+    } else {
+        console.error('Element not found: participantCount');
+    }
+}
+
+// 移除事件卡片
+function removeEventCard(eventId) {
+    const eventCard = document.getElementById(`event-card-${eventId}`);
+    if (eventCard) {
+        eventCard.remove();
+        console.log(`Removed event card with ID: event-card-${eventId}`);
+    } else {
+        console.log(`No event card found with ID: event-card-${eventId}`);
+    }
+}
+
+// 通用的确认弹窗函数
+function showConfirmationModal(actionType, eventId, successCallback) {
+    const url = `/events/${actionType}/${eventId}/`;
+
+    // 显示模态框
+    document.getElementById('confirmationModal').style.display = 'block';
+
+    // 绑定关闭按钮事件
+    document.getElementById('closeModal').onclick = closeModal;
+
+    // 绑定确认按钮事件
+    document.getElementById('confirmAction').onclick = function() {
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("data:::", data);
+
+            if (data.status === 'success') {
+                console.log('Updating participants...');
+                updateParticipantsCount(data); // 直接更新参与者数量
+                successCallback(); // 执行成功后的回调
+                closeModal(); // 关闭弹窗
+            } else {
+                alert('An error occurred, please try again.');
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            alert('An error occurred, please try again.');
         });
-    });
+    };
+}
+
+// 绑定事件逻辑，使用事件委托
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('action-btn')) {
+        console.log('Button clicked');
+        const actionType = event.target.getAttribute('data-action-type');
+        const eventId = event.target.getAttribute('data-event-id');
+        showConfirmationModal(actionType, eventId, function() {
+            removeEventCard(eventId); // 移除事件卡片
+        });
+    }
 });

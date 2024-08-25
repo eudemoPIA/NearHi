@@ -1,101 +1,47 @@
+{% extends 'base_layout.html' %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/events.css' %}">
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<!DOCTYPE html>
 
 {% block content %}
-<!-- Navigator bar -->
-<!-- Top Navigation Bar -->
-<nav class="navbar">
-    <div class="logo">
-        <a href="{% url 'homepage' %}">
-        <img src="{% static 'images/logo.png' %}" alt="NearHi" />
-    </div>
+<p class="greeting-message">Dear {{ request.user.username }}, here are the events you have created:</p>
 
-    <div class="search-bar input-group mb-3">
-        <form method="GET" action="{% url 'homepage' %}"class="w-100 d-flex">
-              <input type="text" name="search_query" placeholder="Search events" value="{{ search_query }}" class="form-control">
-              <div class="input-group-append">
-                  <span class="input-group-text">|</span>
-              </div>
-              <input type="text" name="location" id="location-picker" placeholder="Select location" value="{{ location_query }}" class="form-control">
-              <div class="input-group-append">
-                  <button class="btn btn-primary" type="submit">Search</button>
-              </div>
-        </form>  
-    </div>
-
-    <ul class="nav-links">
-      <li><a href="{% url 'create_event' %}">Create Events</a></li>
-      <!-- My Events button turns gray when entering my_event page -->
-      <li><a href="{% url 'my_events' %}" class="active">My Events</a></li>
-      <div class="favorites-menu">
-          <button class="dropdown-button">Favorites</button>
-          <div class="dropdown-content">
-              <a href="{% url 'saved_events' %}">Saved Events</a>
-              <a href="{% url 'upcoming_events' %}">Upcoming Events</a>
-          </div>
-      </div>
-      {% if user.is_authenticated %}
-          <li><a href="{% url 'profile' %}">Profile</a></li>
-          <li><a href="{% url 'logout' %}">Logout</a></li>
-      {% else %}
-          <li><a href="{% url 'login' %}">Login</a></li>
-          <li><a href="{% url 'signup' %}">Sign Up</a></li>
-      {% endif %}
-    </ul>
-  </nav>
-
-
-<p>Dear {{ request.user.username }}, here are the events you have created:</p>
-
-<!-- Event List -->
-<div class="event-list-container">
-    <div class="event-list">
-        {% for event in page_obj %}
-        <div class="event-card">
-            <a href="{{ event.get_absolute_url }}">
-                <h3>{{ event.title }}</h3>
-                <p>{{ event.event_time|date:"F j, Y, g:i a" }}</p>
-                <p>{{ event.location }}</p>
-                <p>{{ event.current_participants }} participants</p>
+{% block event_list %}
+<div id="event-list-section" class="event-list">
+    {% for event in page_obj %}
+    <div class="event-card" id="event-card-{{ event.id }}">
+        <a href="{{ event.get_absolute_url }}">
+            <img src="{{ event.image.url }}" alt="{{ event.title }}">
+            <h3>{{ event.title }}</h3>
+            <p>{{ event.event_time|date:"F j, Y, g:i a" }}</p>
+            <p>{{ event.location }}</p>
+            <p>{{ event.current_participants }} participants</p>
             </a>
-            <!-- Add Edit and Delete buttons below the event card -->
-            <div class="event-actions">
-                <a href="{% url 'edit_event' event.id %}" class="edit-action-btn">Edit</a>
-                <button class="delete-action-btn" data-action-type="delete_event" data-event-id="{{ event.id }}" class="btn btn-danger">Delete</button>
+        <div class="event-actions">
+            <a href="{% url 'edit_event' event.id %}" class="edit-action-btn">Edit</a>
+            <button class="action-btn" data-action-type="delete-event" data-event-id="{{ event.id }}">Delete</button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock event_list %}
+
+{% block pagination %}
+{{ block.super }} 
+{% endblock pagination %}
+
+<div id="confirmationModal" style="display: none;">
+    <div style="background: rgba(0,0,0,0.5); position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 20px; border-radius: 5px; width: 400px;">
+            <h5>Confirm Action</h5>
+            <p>Are you sure you want to proceed with this action?</p>
+            <div style="text-align: right;">
+                <button id="closeModal" style="margin-right: 10px;">Cancel</button>
+                <button id="confirmAction" style="background: #007bff; color: white; padding: 5px 10px; border: none; border-radius: 3px;">Confirm</button>
             </div>
         </div>
-        {% endfor %}
-    </div>
-
-    <!-- Pagination Controls -->
-    <div class="pagination">
-        {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}&search_query={{ request.GET.search_query }}&location={{ request.GET.location }}&category={{ request.GET.category }}" class="arrow">Previous</a>
-        {% else %}
-        <span class="arrow disabled">Previous</span>
-        {% endif %}  
-
-        {% for num in page_obj.paginator.page_range %}
-            {% if page_obj.number == num %}
-                <span class="current-page">{{ num }}</span>
-            {% else %}
-                <a href="?page={{ num }}">{{ num }}</a>
-            {% endif %}
-        {% endfor %}
-
-        {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}&search_query={{ request.GET.search_query }}&location={{ request.GET.location }}&category={{ request.GET.category }}" class="arrow">Next</a>
-        {% else %}
-            <span class="arrow disabled">Next</span>
-        {% endif %}
     </div>
 </div>
+{% endblock content %}
 
-
-{% endblock %}
-
-<!-- Include the external JavaScript file for delete confirmation -->
+{% block extra_js %}
 <script src="{% static 'js/action.js' %}"></script>
-<script src="{% static 'js/pagination.js' %}"></script>
+{% endblock %}

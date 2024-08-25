@@ -1,3 +1,4 @@
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- 引入 Font Awesome -->
 </head>
 <body>
+  {% block nav_bar %}
   <nav class="navbar">
     <div class="logo">
       <a href="{% url 'homepage' %}">
@@ -45,10 +47,61 @@
       {% endif %}
     </ul>
   </nav>
+  {% endblock nav_bar %}
   
   <div class="content">
     {% block content %}
-    {% endblock %}
+
+    {% block event_list %}
+    <div id="event-list-section" class="event-list">
+      {% for event in page_obj %}
+      <div class="event-card" id="event-card-{{ event.id }}">
+        <a href="{{ event.get_absolute_url }}">
+          <img src="{{ event.image.url }}" alt="{{ event.title }}">
+          <h3>{{ event.title }}</h3>
+          <p>{{ event.event_time|date:"F j, Y, g:i a" }}</p>
+          <p>{{ event.location }}</p>
+          <p>{{ event.current_participants }} participants</p>
+        </a>
+      </div>
+    {% endfor %}
+    {% endblock event_list %}
+
+    {% block pagination %}
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+      <button onclick="window.location.href='?page={{ page_obj.previous_page_number }}#event-list-section'" class="pagination-btn">Previous</button>
+      {% else %}
+      <button class="pagination-btn disabled" disabled>Previous</button>
+      {% endif %}
+  
+      {% if page_obj.has_next %}
+      <button onclick="window.location.href='?page={{ page_obj.next_page_number }}#event-list-section'" class="pagination-btn">Next</button>
+      {% else %}
+      <button class="pagination-btn disabled" disabled>Next</button>
+      {% endif %}
+    </div>
+    {% endblock pagination%}
+    {% endblock content%}
   </div>
+
+  <!-- browser history control and AJAX paginate-->
+  <script src="{% static 'js/pagination.js' %}"></script>
+
+  <!-- GIF before event card image loaded-->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const imgElements = document.querySelectorAll('.event-card img');  
+        imgElements.forEach(img => {
+            img.addEventListener('load', () => {
+                img.classList.add('loaded');
+            });
+      });
+    });
+  </script>
+
+  {% block extra_js %}
+  {% endblock %}
+  
 </body>
 </html>

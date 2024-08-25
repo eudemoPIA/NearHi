@@ -1,176 +1,112 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NearHi Main Page</title>
-    <link rel="stylesheet" href="{% static 'css/homepage.css' %}" /> 
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+{% extends 'base_layout.html' %}
+{% load static %} 
 
-  </head>
-  <body>
-    <!-- Top Navigation Bar -->
-    <nav class="navbar">
-      <div class="logo">
-        <a href="{% url 'homepage' %}">
-          <img src="{% static 'images/logo.png' %}" alt="NearHi" />
-      </div>
-      <div class="search-bar input-group mb-3">
-        <form method="GET" action="{% url 'search_results' %}" class="w-100 d-flex">
-            <input type="text" name="search_query" placeholder="Search events" value="{{ search_query }}">
-            <div class="input-group-append">
-              <span class="input-group-text">|</span>
-            </div>  
-            <input type="text" name="location" id="location-picker" placeholder="Select location" value="{{ location_query }}">
-            <div class="input-group-append">
-              <button class="btn btn-primary" type="submit">Search</button>
-            </div>
-        </form>
-      </div>
-      <ul class="nav-links">
-        <li><a href="{%url 'create_event'%}">Create Events</a></li>
-        <li><a href="{%url 'my_events'%}">My Events</a></li>
-        <li><a href="{% url 'saved_events' %}">Saved Events</a>
-        <li><a href="{% url 'upcoming_events' %}">Upcoming Events</a>
+{% block content %}
+<!-- banner -->
+<div class="banner">
+  <img src="{% static 'images/banner.png' %}" alt="Banner" />
+</div>
 
-        {% if user.is_authenticated %}
-            <li><a href="{% url 'profile' %}">Profile</a></li>
-            <li><a href="{% url 'logout' %}">Logout</a></li>
-        {% else %}
-            <li><a href="{% url 'login' %}">Login</a></li>
-            <li><a href="{% url 'signup' %}">Sign Up</a></li>
-        {% endif %}
-      </ul>
-    </nav>
+<div class="categories">
+  <div class="category">
+    <a
+      href="{% url 'filtered_events' category='Game' %}"
+      class="{% if category == 'Game' %}active{% endif %}"
+    >
+      <img
+        width="80"
+        height="80"
+        src="https://img.icons8.com/dotty/80/controller.png"
+        alt="Game"
+      />
+    </a>
+  </div>
+  <div class="category">
+    <a
+      href="{% url 'filtered_events' category='Performance' %}"
+      class="{% if category == 'Performance' %}active{% endif %}"
+    >
+      <img
+        width="80"
+        height="80"
+        src="https://img.icons8.com/wired/80/theatre-mask.png"
+        alt="Performance"
+      />
+    </a>
+  </div>
+  <div class="category">
+    <a
+      href="{% url 'filtered_events' category='Nature' %}"
+      class="{% if category == 'Nature' %}active{% endif %}"
+    >
+      <img
+        width="80"
+        height="80"
+        src="https://img.icons8.com/wired/80/mountain.png"
+        alt="Nature"
+      />
+    </a>
+  </div>
+  <div class="category">
+    <a
+      href="{% url 'filtered_events' category='Pet' %}"
+      class="{% if category == 'Pet' %}active{% endif %}"
+    >
+      <img
+        width="80"
+        height="80"
+        src="https://img.icons8.com/wired/80/pets.png"
+        alt="Pet"
+      />
+    </a>
+  </div>
+  <div class="category">
+    <a
+      href="{% url 'filtered_events' category='Gourmet' %}"
+      class="{% if category == 'Gourmet' %}active{% endif %}"
+    >
+      <img
+        width="80"
+        height="80"
+        src="https://img.icons8.com/wired/80/food-and-wine.png"
+        alt="Gourmet"
+      />
+    </a>
+  </div>
+  <div class="category">
+    <a
+      href="{% url 'filtered_events' category='Reading' %}"
+      class="{% if category == 'Reading' %}active{% endif %}"
+    >
+      <img
+        width="80"
+        height="80"
+        src="https://img.icons8.com/wired/80/bookmark--v2.png"
+        alt="Reading"
+      />
+    </a>
+  </div>
+  <div class="category">
+    <a
+      href="{% url 'filtered_events' category='Music'%}"
+      class="{% if category == 'Music' %}active{% endif %}"
+    >
+      <img
+        width="80"
+        height="80"
+        src="https://img.icons8.com/wired/80/singing-teacher.png"
+        alt="Music"
+      />
+    </a>
+  </div>
+</div>
 
-    <!-- Banner Section -->
-    <div class="banner">
-      <img src="{% static 'images/banner.png' %}" alt="Banner" />
-    </div>
+{% block event_list %}
+{{ block.super }}
+{% endblock event_list %}
 
-    <!-- Event Categories -->
-    <div class="categories">
-      <div class="category">
-        <a href="{% url 'filtered_events' category='Game' %}"
-            class="{% if category == 'Game' %}active{% endif %}" >
-            <img
-                width="80"
-                height="80"
-                src="https://img.icons8.com/dotty/80/controller.png"
-                alt="Game"
-            />
-        </a>
-      </div>
-      <div class="category">
-        <a href="{% url 'filtered_events' category='Performance' %}"
-            class="{% if category == 'Performance' %}active{% endif %}">
-            <img
-                width="80"
-                height="80"
-                src="https://img.icons8.com/wired/80/theatre-mask.png"
-                alt="Performance"
-            />
-        </a>
-      </div>
-      <div class="category">
-        <a href="{% url 'filtered_events' category='Nature' %}"
-            class="{% if category == 'Nature' %}active{% endif %}"> 
-            <img
-                width="80"
-                height="80"
-                src="https://img.icons8.com/wired/80/mountain.png"
-                alt="Nature"
-            />
-        </a>
-      </div>
-      <div class="category">
-        <a href="{% url 'filtered_events' category='Pet' %}"
-            class="{% if category == 'Pet' %}active{% endif %}"> 
-            <img
-                width="80"
-                height="80"
-                src="https://img.icons8.com/wired/80/pets.png"
-                alt="Pet"
-            />
-        </a>
-      </div>
-      <div class="category">
-        <a href="{% url 'filtered_events' category='Gourmet' %}"
-            class="{% if category == 'Gourmet' %}active{% endif %}"> 
-            <img
-                width="80"
-                height="80"
-                src="https://img.icons8.com/wired/80/food-and-wine.png"
-                alt="Gourmet"
-            />
-        </a>
-      </div>
-      <div class="category">
-        <a href="{% url 'filtered_events' category='Reading' %}"
-            class="{% if category == 'Reading' %}active{% endif %}">
-            <img
-                width="80"
-                height="80"
-                src="https://img.icons8.com/wired/80/bookmark--v2.png"
-                alt="Reading"
-            />
-        </a>
-      </div>
-      <div class="category">
-        <a href="{% url 'filtered_events' category='Music'%}"
-            class="{% if category == 'Music' %}active{% endif %}">
-            <img
-                width="80"
-                height="80"
-                src="https://img.icons8.com/wired/80/singing-teacher.png"
-                alt="Music"
-            />
-        </a>
-      </div>
-    </div>
+{% block pagination %}
+{{ block.super }}
+{% endblock pagination %}
 
-    <!-- Event List -->
-    <div class="event-list-container">
-        <div class="event-list">
-          {% for event in page_obj %}
-          <div class="event-card">
-            <a href="{{ event.get_absolute_url }}">
-              <h3>{{ event.title }}</h3>
-              <p>{{ event.event_time|date:"F j, Y, g:i a" }}</p>
-              <p>{{ event.location }}</p>
-              <p>{{ event.current_participants }} participants</p>
-            </a>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-
-        <!-- Pagination Controls -->
-        <div class="pagination">
-            {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}" class="arrow">Previous</a>
-            {% else %}
-            <span class="arrow disabled">Previous</span>
-            {% endif %}  
-
-            {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                    <span class="current-page">{{ num }}</span>
-                {% else %}
-                <a href="?page={{ num }}">{{ num }}</a>
-                {% endif %}
-            {% endfor %}
-
-            {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" class="arrow">Next</a>
-            {% else %}
-                <span class="arrow disabled">Next</span>
-            {% endif %}
-        </div>
-    </div>
-
-    <script src="{% static 'js/pagination.js' %}"></script>
-
-  </body>
-</html>
+{% endblock content %}

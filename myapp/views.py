@@ -128,7 +128,8 @@ def create_event(request):
 
 def event_detail(request, pk):
     event = get_object_or_404(Event, pk=pk)
-    return render(request, 'myapp/event_detail.html', {'event': event})
+    is_favorite = request.user in event.saved_by_users.all()
+    return render(request, 'myapp/event_detail.html', {'event': event, 'is_favorite': is_favorite})
 
 
 @login_required(login_url='login')
@@ -148,12 +149,17 @@ def apply_event(request, pk):
     event = get_object_or_404(Event, pk=pk)
     if request.user in event.applied_by_users.all():
         event.applied_by_users.remove(request.user)
+        event.update_current_participants()
         applied = False
     else:
         event.applied_by_users.add(request.user)
         event.update_current_participants()
         applied = True
-    return JsonResponse({'applied': applied})
+    return JsonResponse({
+        'applied': applied,
+        'current_participants':
+        event.current_participants,
+        })
 
 
 def paginate_events(request, events_list, per_page=8):
@@ -191,7 +197,7 @@ def search_results(request):
 
 
 def filtered_events(request, category):
-    events = Event.object.filter(category__iexact=category)
+    events = Event.objects.filter(category__iexact=category)
     page_obj = paginate_events(request, events)
     return render(request, 'myapp/filtered_events.html', {
         'page_obj': page_obj,
@@ -201,14 +207,13 @@ def filtered_events(request, category):
 
 @login_required(login_url='login')
 def saved_events(request):
-    print("Accessing saved_events view") 
-    page_obj = paginate_events(request, request.user.saved_events.all())
+    saved_events = request.user.saved_events.all()
+    page_obj = paginate_events(request, saved_events.all())
     return render(request, 'myapp/saved_events.html', {'page_obj': page_obj})
 
 
 @login_required(login_url='login')
 def upcoming_events(request):
-    print("Accessing upcoming_events view")
     page_obj = paginate_events(request, request.user.upcoming_events.all())
     return render(request, 'myapp/upcoming_events.html', {'page_obj': page_obj})
 
@@ -220,13 +225,13 @@ def my_events(request):
 
 
 @login_required(login_url='login')
-def edit_event(request, event_id):
-    event = get_object_or_404(Event, id=event_id, created_by=request.user)
+def edit_event(request, pk):
+    event = get_object_or_404(Event, pk=pk, created_by=request.user)
     if request.method == "POST":
         form = EventForm(request.POST, request.FILES, instance=event)
         if form.is_valid():
             form.save()
-            return redirect('myapp/event_detail', event_id=event.id)
+            return redirect('event_detail', pk=event.pk)
     else:
         form = EventForm(instance=event)
     return render(request, 'edit_event.html', {'form': form})
@@ -237,16 +242,8 @@ def delete_event(request, event_id):
     event = get_object_or_404(Event, id=event_id, created_by=request.user)
     if request.method == "POST":
         event.delete()
-        return JsonResponse({"success": True, "message": "Event deleted successfully."}, status=200)
-    return JsonResponse({"success": False, "message": "Invalid request."}, status=400)
-
-
-@login_required(login_url='login')
-def saved_events(request):
-    user = request.user
-    saved_events_list = user.saved_events.all()
-    return render(request, 'saved_events.html', {'events': saved_events_list})
-
+        return JsonResponse({'status': 'success', "message": "Event deleted successfully."}, status=200)
+    return JsonResponse({'status': 'error', "message": "Invalid request."}, status=400)
 
 @login_required(login_url='login')
 def cancel_collection(request, event_id):
@@ -258,17 +255,13 @@ def cancel_collection(request, event_id):
 
 
 @login_required(login_url='login')
-def upcoming_events(request):
-    user = request.user
-    upcoming_events_list = user.upcoming_events.all()
-    return render(request, 'upcoming_events.html', {'events': upcoming_events_list})
-
-
-@login_required(login_url='login')
 def cancel_application(request, event_id):
     if request.method == 'POST':
         event = get_object_or_404(Event, id=event_id)
+        if request.user in event.applied_by_users.all():
+            event.applied_by_users.remove(request.user)
+            event.update_current_participants()
         request.user.upcoming_events.remove(event)
-        return JsonResponse({'status': 'success', 'message': 'You have canceled the application'})
+        return JsonResponse({'status': 'success', 'current_participants': event.current_participants})
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 

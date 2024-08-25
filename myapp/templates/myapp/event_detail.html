@@ -15,7 +15,7 @@
             <img src="{{ event.image.url }}" alt="Event Image">
             <a href="{% url 'homepage' %}" class="btn-back">Back to Homepage</a>
             <button id="favorite-button" onclick="toggleFavorite({{ event.id }})">
-                <i class="far fa-heart"></i> <!-- 初始空心 -->
+                <i class="{% if is_favorite %}fas{% else %}far{% endif %} fa-heart"></i>
             </button>
         </div>
 
@@ -28,16 +28,29 @@
             <p><strong>Description:</strong> {{ event.description }}</p>
             <p><strong>Fee:</strong> £{{ event.fee }}</p>
             <p><strong>Max Participants:</strong> {{ event.max_participants }}</p>
-            <p><strong>Current Participants:</strong> {{ event.current_participants }}</p>
+            <p class="current-participants"><strong>Current Participants:</strong> {{ event.current_participants }}</p>
         </div>
 
         <!-- 申请按钮 -->
         <div class="apply-container">
-            <button id="apply-button" onclick="applyEvent({{ event.id }})">Apply</button>
+            <button id="apply-button" data-event-id="{{ event.id }}">
+                {% if user in event.applied_by_users.all %}
+                    Applied
+                {% else %}
+                    Apply
+                {% endif %}
+            </button>
         </div>
     </div>
 
+    <form id="csrf-form" method="post">
+        {% csrf_token %}
+    </form>
+
     <!-- 引入 JavaScript 文件 -->
     <script src="{% static 'js/event_detail.js' %}"></script>
+    <script>
+        var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    </script>
 </body>
 </html>

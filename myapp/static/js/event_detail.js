@@ -14,8 +14,8 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function toggleFavorite(eventId) {  // 专门处理前端的 AJAX 请求的url,待配置
-    fetch(`/toggle-favorite/${eventId}/`, {
+function toggleFavorite(eventId) {  // the red heart for save event
+    fetch(`/events/save/${eventId}/`, {
         method: 'POST',
         headers: {
             'X-CSRFToken': getCookie('csrftoken'),
@@ -25,29 +25,45 @@ function toggleFavorite(eventId) {  // 专门处理前端的 AJAX 请求的url,�
     .then(data => {
         const heartIcon = document.querySelector('#favorite-button i');
         if (data.is_favorite) {
-            heartIcon.classList.remove('far'); // 切换到实心
+            heartIcon.classList.remove('far'); // solid heart
             heartIcon.classList.add('fas');
         } else {
-            heartIcon.classList.remove('fas'); // 切换到空心
+            heartIcon.classList.remove('fas'); // empty heart
             heartIcon.classList.add('far');
         }
     });
 }
 
 function applyEvent(eventId) {
-    fetch(`/apply-event/${eventId}/`, {   //apply event的url(这个event_detail还得配个url，带着event/<int:event_id>/的)
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': getCookie('csrftoken'),
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        const applyButton = document.querySelector('#apply-button');
-        if (data.applied) {
-            applyButton.innerText = 'Applied';
-        } else {
-            applyButton.innerText = 'Apply';
-        }
+    // 获取按钮和参与人数的元素
+    const applyButton = document.querySelector('#apply-button');
+    const participantCountElement = document.querySelector('.current-participants');
+
+    applyButton.addEventListener('click', function() {
+        fetch(`/events/${eventId}/apply/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // 动态更新参与人数和按钮状态
+            participantCountElement.textContent = `Current Participants: ${data.current_participants}`;
+            applyButton.textContent = data.applied ? 'Applied' : 'Apply';
+        })
+        .catch(error => console.error('Error:', error));
     });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const applyButton = document.querySelector('#apply-button');
+    if (applyButton) {
+        // 获取页面加载时确定的 eventId
+        const eventId = applyButton.dataset.eventId;
+        // 调用 applyEvent 进行事件绑定
+        applyEvent(eventId);
+    }
+});
+
