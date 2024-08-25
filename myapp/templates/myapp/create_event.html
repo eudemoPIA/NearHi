@@ -1,25 +1,17 @@
-{% load static %}
-{% block content %}
-  <h2>Create Event</h2>
-  
-  <!-- Error ghandling -->
-  {% if form.errors %}
-    <div class="error-summary">
-      <p>There were some errors with your submission:</p>
-      <ul>
-        {% for field in form %}
-          {% if field.errors %}
-            <li><strong>{{ field.label }}:</strong> {{ field.errors|striptags }}</li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
-  
-  {% include "myapp/_event_form.html" with submit_button_text="Create Event" %}
+{% extends "_event_form.html" %}
 
-  <!-- Google Maps API Integration -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwkTOGVWTbNUcU7FFCLbQCUaeNrwCXM2k&libraries=places"></script>
-  <script src="{% static 'myapp/google_maps.js' %}"></script>
-
+{% block pagename %}
+  Create Event
 {% endblock %}
+
+
+{% block title %}
+  Create Event
+{% endblock %}
+
+{% block buttons %}
+<button type="submit" class="btn btn-primary">Create Event</button>
+<a href="{% url 'homepage' %}" class="btn btn-secondary">Cancel</a>
+{% endblock %}
+
+  

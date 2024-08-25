@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.db.models import Q
+from django.urls import reverse
 from .forms import LoginForm, SignUpForm, EventForm, ProfileForm
 from .models import MyUser, Event
 from django.utils import timezone
@@ -118,13 +119,11 @@ def create_event(request):
             event = form.save(commit=False)
             event.created_by = request.user
             event.save()
-            return redirect('event_detail', pk=event.id) #跳到event detail页面
+            return redirect('event_detail', pk=event.id)
         
     else:
         form = EventForm()
-
-    return render(request, 'myapp/create_event.html', {'form': form}) #渲染空的create event表单
-
+    return render(request, 'myapp/create_event.html', {'form': form})
 
 def event_detail(request, pk):
     event = get_object_or_404(Event, pk=pk)
@@ -234,7 +233,7 @@ def edit_event(request, pk):
             return redirect('event_detail', pk=event.pk)
     else:
         form = EventForm(instance=event)
-    return render(request, 'edit_event.html', {'form': form})
+    return render(request, 'edit_event.html', {'form': form, 'event': event})
 
 
 @login_required(login_url='login')

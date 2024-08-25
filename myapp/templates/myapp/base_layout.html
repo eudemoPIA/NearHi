@@ -25,7 +25,7 @@
           <div class="location-icon">
             <i class="fas fa-map-marker-alt"></i>
           </div>  
-          <input type="text" class="location-input" name="location" placeholder="Enter location" value="{{ location_query }}" id="location-picker" >
+          <input type="text" class="location-input" name="location" placeholder="Enter location" value="{{ location_query }}" data-autocomplete-type="city" >
           <button class="search-button" type="submit">
               <i class="fas fa-search"></i>
            </button>    
@@ -102,6 +102,11 @@
 
   {% block extra_js %}
   {% endblock %}
+
+  <!-- Google Maps API for Autocomplete -->
+  <script 
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwkTOGVWTbNUcU7FFCLbQCUaeNrwCXM2k&loading=async&libraries=places&callback=initAutocomplete&language=en" async defer></script>
+    <script src="{% static 'js/google_map.js' %}"></script>
   
 </body>
 </html>

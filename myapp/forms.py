@@ -70,6 +70,13 @@ class EventForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = MyUser
-        fields = ['hobbies', 'bio', 'profile_picture', 'city']
+        fields = ['profile_picture', 'city', 'hobbies', 'bio']
+        widgets = {
+            'bio': forms.Textarea(
+                attrs={
+                    'placeholder': 'Talk about yourself :)'
+                }
+            ),
+        }
 
 

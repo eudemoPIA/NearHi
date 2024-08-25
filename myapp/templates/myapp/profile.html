@@ -1,8 +1,13 @@
-
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/profile.css' %}" />
 <!DOCTYPE html>
 <div class="profile-container">
+
+  <!-- Back to homepage -->
+  <div style="position: absolute; top: 10px; left: 10px">
+    <a href="{% url 'homepage' %}" class="btn btn-secondary">Back to homepage</a>
+  </div>
+
   <!-- Edit button -->
   <div style="position: absolute; top: 10px; right: 10px">
     <a href="{% url 'profile' %}?edit=true" class="btn btn-secondary">Edit</a>
@@ -22,30 +27,59 @@
   <!-- Information -->
   <div class="profile-details">
     <ul>
-      <li><strong>City:</strong> {{ user.city|default:"Not provided yet" }}</li>
+      <li>
+        <strong>City:</strong> {{ user.city|default:"Not provided yet" }}
+      </li>
       <li>
         <strong>Hobbies:</strong> {{ user.hobbies|default:"Not provided yet" }}
       </li>
       <li>
-        <strong>Talk about yourself:</strong> {{ user.bio|default:"Not provided
-        yet" }}
+        <strong>Talk about yourself:</strong> {{ user.bio|default:"Not provided yet" }}
       </li>
     </ul>
   </div>
 
-  <!-- is_editing or not -->
+  <!-- when editing -->
   {% if is_editing %}
   <form method="post" enctype="multipart/form-data">
-    {% csrf_token %} {{ form.non_field_errors }} {% for field in form %}
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+
     <div class="form-group">
-      {{ field.label_tag }}<br />
-      {{ field }} {% if field.errors %}
-      <div class="alert alert-danger">{{ field.errors }}</div>
+      <label for="id_city">City:</label>
+      <input type="text" class="location-input" name="city" placeholder="Enter your city" value="{{ user.city|default:'' }}" data-autocomplete-type="city">
+      {% if form.city.errors %}
+        <div class="alert alert-danger">{{ form.city.errors }}</div>
       {% endif %}
     </div>
-    {% endfor %}
+
+    <div class="form-group">
+      <label for="id_hobbies">Hobbies:</label>
+      <input type="text" name="hobbies" value="{{ user.hobbies|default:'' }}">
+      {% if form.hobbies.errors %}
+        <div class="alert alert-danger">{{ form.hobbies.errors }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="id_bio">Bio:</label>
+      <textarea name="bio" placeholder="Talk about yourself :)">{{ user.bio|default:'' }}</textarea>
+      {% if form.bio.errors %}
+        <div class="alert alert-danger">{{ form.bio.errors }}</div>
+      {% endif %}
+    </div>
+
     <button type="submit" class="btn btn-primary">Save Changes</button>
     <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
   </form>
   {% endif %}
 </div>
+
+<script 
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwkTOGVWTbNUcU7FFCLbQCUaeNrwCXM2k&loading=async&libraries=places&callback=initAutocomplete&language=en" async defer></script>
+    <script src="{% static 'js/google_map.js' %}"></script>
