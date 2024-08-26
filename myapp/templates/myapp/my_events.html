@@ -10,9 +10,11 @@
     <a href="{{ event.get_absolute_url }}">
       <img src="{{ event.image.url }}" alt="{{ event.title }}" />
       <h3>{{ event.title }}</h3>
-      <p>{{ event.event_time|date:"F j, Y, g:i a" }}</p>
-      <p>{{ event.location }}</p>
-      <p>{{ event.current_participants }} participants</p>
+      <div class="desc">
+        <p>{{ event.event_time|date:"F j, Y, g:i a" }}</p>
+        <p>{{ event.location }}</p>
+        <p>{{ event.current_participants }} participants</p>
+      </div>
     </a>
     <div class="event-actions">
       <a href="{% url 'edit_event' event.id %}" class="edit-action-btn">Edit</a>
