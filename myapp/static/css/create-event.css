@@ -1,16 +1,16 @@
 /* 设置页面容器的整体样式 */
-.profile-container {
+.create-container {
     width: 800px;
     margin: 0 auto;
     padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 1px 0px 10px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     border-radius: 10px;
     position: relative;
 }
 
 /* Edit button */
-.profile-container .edit-btn {
+.create-container .edit-btn {
     position: absolute;
     top: 20px;
     right: 20px;
@@ -29,7 +29,7 @@ a{
     color:#Fff;
 }
 
-.profile-container .edit-btn a {
+.create-container .edit-btn a {
     background-color: #007bff;
     color: #fff;
     padding: 8px 16px;
@@ -37,7 +37,7 @@ a{
     text-decoration: none;
 }
 
-.profile-container .edit-btn a:hover {
+.create-container .edit-btn a:hover {
     background-color: #0056b3;
 }
 
@@ -93,11 +93,10 @@ form{
 .form-group{
     display: flex;
     align-items: center;
-    justify-content: center;
 }
 .form-group label {
     display: inline-block;
-    width: 62px;
+    width: 200px;
     text-align: right;
     margin-right: 10px;
 }
@@ -107,9 +106,12 @@ form{
     line-height: 24px;
 }
 
+.form-group a{
+    color: #5153cb;
+}
 /* 设置响应式布局 */
 @media (max-width: 768px) {
-    .profile-container {
+    .create-container {
         width: 95%;
         padding: 15px;
     }

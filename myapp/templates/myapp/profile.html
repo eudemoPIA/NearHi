@@ -2,10 +2,11 @@
 <link rel="stylesheet" href="{% static 'css/profile.css' %}" />
 <!DOCTYPE html>
 <div class="profile-container">
-
   <!-- Back to homepage -->
   <div style="position: absolute; top: 10px; left: 10px">
-    <a href="{% url 'homepage' %}" class="btn btn-secondary">Back to homepage</a>
+    <a href="{% url 'homepage' %}" class="btn btn-secondary"
+      >Back to homepage</a
+    >
   </div>
 
   <!-- Edit button -->
@@ -16,7 +17,7 @@
   <!-- Name and Picture -->
   <div class="profile-header" style="text-align: center">
     <img
-      src="{{ user.profile_picture.url }}"
+      src="{{ user.profile_picture.url|default:"/media/profile_pictures/default_avatar.png" }}"
       alt="Profile Picture"
       class="profile-image"
       style="border-radius: 50%; width: 150px; height: 150px"
@@ -27,9 +28,7 @@
   <!-- Information -->
   <div class="profile-details">
     <ul>
-      <li>
-        <strong>City:</strong> {{ user.city|default:"Not provided yet" }}
-      </li>
+      <li><strong>City:</strong> {{ user.city|default:"Not provided yet" }}</li>
       <li>
         <strong>Hobbies:</strong> {{ user.hobbies|default:"Not provided yet" }}
       </li>
@@ -42,35 +41,40 @@
   <!-- when editing -->
   {% if is_editing %}
   <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-
-    {% if form.non_field_errors %}
-      <div class="alert alert-danger">
-        {{ form.non_field_errors }}
-      </div>
+    {% csrf_token %} {% if form.non_field_errors %}
+    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
     {% endif %}
 
     <div class="form-group">
       <label for="id_city">City:</label>
-      <input type="text" class="location-input" name="city" placeholder="Enter your city" value="{{ user.city|default:'' }}" data-autocomplete-type="city">
+      <input
+        type="text"
+        class="location-input"
+        name="city"
+        placeholder="Enter your city"
+        value="{{ user.city|default:'' }}"
+        data-autocomplete-type="city"
+      />
       {% if form.city.errors %}
-        <div class="alert alert-danger">{{ form.city.errors }}</div>
+      <div class="alert alert-danger">{{ form.city.errors }}</div>
       {% endif %}
     </div>
 
     <div class="form-group">
       <label for="id_hobbies">Hobbies:</label>
-      <input type="text" name="hobbies" value="{{ user.hobbies|default:'' }}">
+      <input type="text" name="hobbies" value="{{ user.hobbies|default:'' }}" />
       {% if form.hobbies.errors %}
-        <div class="alert alert-danger">{{ form.hobbies.errors }}</div>
+      <div class="alert alert-danger">{{ form.hobbies.errors }}</div>
       {% endif %}
     </div>
 
     <div class="form-group">
       <label for="id_bio">Bio:</label>
-      <textarea name="bio" placeholder="Talk about yourself :)">{{ user.bio|default:'' }}</textarea>
+      <textarea name="bio" placeholder="Talk about yourself :)">
+{{ user.bio|default:'' }}</textarea
+      >
       {% if form.bio.errors %}
-        <div class="alert alert-danger">{{ form.bio.errors }}</div>
+      <div class="alert alert-danger">{{ form.bio.errors }}</div>
       {% endif %}
     </div>
 
@@ -80,6 +84,9 @@
   {% endif %}
 </div>
 
-<script 
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwkTOGVWTbNUcU7FFCLbQCUaeNrwCXM2k&loading=async&libraries=places&callback=initAutocomplete&language=en" async defer></script>
-    <script src="{% static 'js/google_map.js' %}"></script>
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwkTOGVWTbNUcU7FFCLbQCUaeNrwCXM2k&loading=async&libraries=places&callback=initAutocomplete&language=en"
+  async
+  defer
+></script>
+<script src="{% static 'js/google_map.js' %}"></script>

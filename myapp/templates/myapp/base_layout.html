@@ -1,112 +1,141 @@
 {% load static %}
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NearHi</title>
-    <link rel="stylesheet" href="{% static 'css/global.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- 引入 Font Awesome -->
-</head>
-<body>
-  {% block nav_bar %}
-  <nav class="navbar">
-    <div class="logo">
-      <a href="{% url 'homepage' %}">
-        <img src="{% static 'images/logo.png' %}" alt="NearHi" />
-    </div>
-        
-    <div class="search-bar">
-      <form method="GET" action="{% url 'search_results' %}">
+    <link rel="stylesheet" href="{% static 'css/global.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <!-- 引入 Font Awesome -->
+  </head>
+  <body>
+    {% block nav_bar %}
+    <nav class="navbar">
+      <div class="logo">
+        <a href="{% url 'homepage' %}">
+          <img src="{% static 'images/logo.png' %}" alt="NearHi"
+        /></a>
+      </div>
+
+      <div class="search-bar">
+        <form method="GET" action="{% url 'search_results' %}">
           <div class="search-icon">
-              <i class="fas fa-search"></i>
+            <i class="fas fa-search"></i>
           </div>
-          <input type="text" class="search_input" name="search_query" placeholder="Search events" value="{{ search_query }}" id="keyword">
+          <input
+            type="text"
+            class="search_input"
+            name="search_query"
+            placeholder="Search events"
+            value="{{ search_query }}"
+            id="keyword"
+          />
           <div class="divider"></div>
           <div class="location-icon">
             <i class="fas fa-map-marker-alt"></i>
-          </div>  
-          <input type="text" class="location-input" name="location" placeholder="Enter location" value="{{ location_query }}" data-autocomplete-type="city" >
+          </div>
+          <input
+            type="text"
+            class="location-input"
+            name="location"
+            placeholder="Enter location"
+            value="{{ location_query }}"
+            data-autocomplete-type="city"
+          />
           <button class="search-button" type="submit">
-              <i class="fas fa-search"></i>
-           </button>    
-      </form>
-    </div>
-        
-    <ul class="nav-links">
-      <li><a href="{%url 'create_event'%}">Create Events</a></li>
-      <li><a href="{%url 'my_events'%}">My Events</a></li>
-      <li><a href="{% url 'saved_events' %}">Saved Events</a>
-      <li><a href="{% url 'upcoming_events' %}">Upcoming Events</a>
-
-      {% if user.is_authenticated %}
-          <li><a href="{% url 'profile' %}">Profile</a></li>
-          <li><a href="{% url 'logout' %}">Logout</a></li>
-      {% else %}
-          <li><a href="{% url 'login' %}">Login</a></li>
-          <li><a href="{% url 'signup' %}">Sign Up</a></li>
-      {% endif %}
-    </ul>
-  </nav>
-  {% endblock nav_bar %}
-  
-  <div class="content">
-    {% block content %}
-
-    {% block event_list %}
-    <div id="event-list-section" class="event-list">
-      {% for event in page_obj %}
-      <div class="event-card" id="event-card-{{ event.id }}">
-        <a href="{{ event.get_absolute_url }}">
-          <img src="{{ event.image.url }}" alt="{{ event.title }}">
-          <h3>{{ event.title }}</h3>
-          <p>{{ event.event_time|date:"F j, Y, g:i a" }}</p>
-          <p>{{ event.location }}</p>
-          <p>{{ event.current_participants }} participants</p>
-        </a>
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
       </div>
-    {% endfor %}
-    {% endblock event_list %}
 
-    {% block pagination %}
-    <div class="pagination">
-      {% if page_obj.has_previous %}
-      <button onclick="window.location.href='?page={{ page_obj.previous_page_number }}#event-list-section'" class="pagination-btn">Previous</button>
-      {% else %}
-      <button class="pagination-btn disabled" disabled>Previous</button>
-      {% endif %}
-  
-      {% if page_obj.has_next %}
-      <button onclick="window.location.href='?page={{ page_obj.next_page_number }}#event-list-section'" class="pagination-btn">Next</button>
-      {% else %}
-      <button class="pagination-btn disabled" disabled>Next</button>
-      {% endif %}
+      <ul class="nav-links">
+        <li><a href="{%url 'create_event'%}">Create Events</a></li>
+        <li><a href="{%url 'my_events'%}">My Events</a></li>
+        <li><a href="{% url 'saved_events' %}">Saved Events</a></li>
+        <li>
+          <a href="{% url 'upcoming_events' %}">Upcoming Events</a>
+
+          {% if user.is_authenticated %}
+        </li>
+
+        <li><a href="{% url 'profile' %}">Profile</a></li>
+        <li><a href="{% url 'logout' %}">Logout</a></li>
+        {% else %}
+        <li><a href="{% url 'login' %}">Login</a></li>
+        <li><a href="{% url 'signup' %}">Sign Up</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endblock nav_bar %}
+
+    <div class="content">
+      {% block content %} {% block event_list %}
+      <div id="event-list-section" class="event-list">
+        {% for event in page_obj %}
+        <div class="event-card" id="event-card-{{ event.id }}">
+          <a href="{{ event.get_absolute_url }}">
+            <img src="{{ event.image.url }}" alt="{{ event.title }}" />
+            <h3>{{ event.title }}</h3>
+            <div class="desc">
+              <p>{{ event.event_time|date:"F j, Y, g:i a" }}</p>
+              <p>{{ event.location }}</p>
+              <p>{{ event.current_participants }} participants</p>
+            </div>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+      {% endblock event_list %} {% block pagination %}
+      <div class="pagination">
+        {% if page_obj.has_previous %}
+        <button
+          onclick="window.location.href='?page={{ page_obj.previous_page_number }}#event-list-section'"
+          class="pagination-btn"
+        >
+          Previous
+        </button>
+        {% else %}
+        <button class="pagination-btn disabled" disabled>Previous</button>
+        {% endif %} {% if page_obj.has_next %}
+        <button
+          onclick="window.location.href='?page={{ page_obj.next_page_number }}#event-list-section'"
+          class="pagination-btn"
+        >
+          Next
+        </button>
+        {% else %}
+        <button class="pagination-btn disabled" disabled>Next</button>
+        {% endif %}
+      </div>
+      {% endblock pagination%} {% endblock content%}
     </div>
-    {% endblock pagination%}
-    {% endblock content%}
-  </div>
 
-  <!-- browser history control and AJAX paginate-->
-  <script src="{% static 'js/pagination.js' %}"></script>
+    <!-- browser history control and AJAX paginate-->
+    <script src="{% static 'js/pagination.js' %}"></script>
 
-  <!-- GIF before event card image loaded-->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const imgElements = document.querySelectorAll('.event-card img');  
-        imgElements.forEach(img => {
-            img.addEventListener('load', () => {
-                img.classList.add('loaded');
-            });
+    <!-- GIF before event card image loaded-->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const imgElements = document.querySelectorAll(".event-card img");
+        imgElements.forEach((img) => {
+          img.addEventListener("load", () => {
+            img.classList.add("loaded");
+          });
+        });
       });
-    });
-  </script>
+    </script>
 
-  {% block extra_js %}
-  {% endblock %}
+    {% block extra_js %} {% endblock %}
 
-  <!-- Google Maps API for Autocomplete -->
-  <script 
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwkTOGVWTbNUcU7FFCLbQCUaeNrwCXM2k&loading=async&libraries=places&callback=initAutocomplete&language=en" async defer></script>
+    <!-- Google Maps API for Autocomplete -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwkTOGVWTbNUcU7FFCLbQCUaeNrwCXM2k&loading=async&libraries=places&callback=initAutocomplete&language=en"
+      async
+      defer
+    ></script>
     <script src="{% static 'js/google_map.js' %}"></script>
-  
-</body>
+  </body>
 </html>

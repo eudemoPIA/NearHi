@@ -13,7 +13,6 @@
         <!-- 图片区域 -->
         <div class="image-container">
             <img src="{{ event.image.url }}" alt="Event Image">
-            <a href="{% url 'homepage' %}" class="btn-back">Back to Homepage</a>
             <button id="favorite-button" onclick="toggleFavorite({{ event.id }})">
                 <i class="{% if is_favorite %}fas{% else %}far{% endif %} fa-heart"></i>
             </button>
@@ -41,6 +40,8 @@
                 {% endif %}
             </button>
         </div>
+
+        <a href="{% url 'homepage' %}" class="btn-back">Back to Homepage</a>
     </div>
 
     <form id="csrf-form" method="post">

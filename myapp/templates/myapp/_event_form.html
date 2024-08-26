@@ -5,105 +5,107 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block pagename %}Form Title{% endblock %}</title>
-    <!--<link rel="stylesheet" href="{% static 'css/styles.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'css/create-event.css' %}" />
   </head>
-  <body>
+  <body style="margin: 0 auto; width: 800px; text-align: center">
     <h2>{% block title %}Form Title{% endblock %}</h2>
-    <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-
-      {% if form.errors %}
+    <div class="create-container">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %} {% if form.errors %}
         <div class="error-summary">
-            <p>There were some errors with your submission:</p>
-            <ul>
-                {% for field in form %}
-                    {% if field.errors %}
-                        <li><strong>{{ field.label }}:</strong> {{ field.errors|striptags }}</li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
+          <p>There were some errors with your submission:</p>
+          <ul>
+            {% for field in form %} {% if field.errors %}
+            <li>
+              <strong>{{ field.label }}:</strong> {{ field.errors|striptags }}
+            </li>
+            {% endif %} {% endfor %}
+          </ul>
         </div>
         {% endif %}
 
-      <!-- Title -->
-      <div class="form-group">
-        <label for="{{ form.title.id_for_label }}">Title:</label>
-        {{ form.title }} {% if form.title.errors %}
-        <div class="error">{{ form.title.errors }}</div>
-        {% endif %}
-      </div>
+        <!-- Title -->
+        <div class="form-group">
+          <label for="{{ form.title.id_for_label }}">Title:</label>
+          {{ form.title }} {% if form.title.errors %}
+          <div class="error">{{ form.title.errors }}</div>
+          {% endif %}
+        </div>
 
-      <!-- Event Time -->
-      <div class="form-group">
-        <label for="{{ form.event_time.id_for_label }}">Event Time:</label>
-        {{ form.event_time }} {% if form.event_time.errors %}
-        <div class="error">{{ form.event_time.errors }}</div>
-        {% endif %}
-      </div>
+        <!-- Event Time -->
+        <div class="form-group">
+          <label for="{{ form.event_time.id_for_label }}">Event Time:</label>
+          {{ form.event_time }} {% if form.event_time.errors %}
+          <div class="error">{{ form.event_time.errors }}</div>
+          {% endif %}
+        </div>
 
-      <!-- Location -->
-      <div class="form-group">
-        <label for="id_location">Location:</label>
-        <input
-          type="text"
-          class="location-input"
-          id="id_location"
-          name="location"
-          placeholder="Enter a location"
-          value="{{ form.location.value|default:'' }}"
-          data-autocomplete-type="address"
-        />
-      </div>
+        <!-- Location -->
+        <div class="form-group">
+          <label for="id_location">Location:</label>
+          <input
+            type="text"
+            class="location-input"
+            id="id_location"
+            name="location"
+            placeholder="Enter a location"
+            value="{{ form.location.value|default:'' }}"
+            data-autocomplete-type="address"
+          />
+        </div>
 
-      <!-- Description -->
-      <div class="form-group">
-        <label for="{{ form.description.id_for_label }}">Description:</label>
-        {{ form.description }} {% if form.description.errors %}
-        <div class="error">{{ form.description.errors }}</div>
-        {% endif %}
-      </div>
+        <!-- Description -->
+        <div class="form-group">
+          <label for="{{ form.description.id_for_label }}">Description:</label>
+          {{ form.description }} {% if form.description.errors %}
+          <div class="error">{{ form.description.errors }}</div>
+          {% endif %}
+        </div>
 
-      <!-- Image Upload -->
-      <div class="form-group">
-        <label for="{{ form.image.id_for_label }}">Upload an Image:</label>
-        {{ form.image }} {% if form.image.errors %}
-        <div class="error">{{ form.image.errors }}</div>
-        {% endif %}
-      </div>
+        <!-- Image Upload -->
+        <div class="form-group">
+          <label for="{{ form.image.id_for_label }}">Upload an Image:</label>
+          {{ form.image }} {% if form.image.errors %}
+          <div class="error">{{ form.image.errors }}</div>
+          {% endif %}
+        </div>
 
-      <!-- Category -->
-      <div class="form-group">
-        <label for="{{ form.category.id_for_label }}">Category:</label>
-        {{ form.category }} {% if form.category.errors %}
-        <div class="error">{{ form.category.errors }}</div>
-        {% endif %}
-      </div>
+        <!-- Category -->
+        <div class="form-group">
+          <label for="{{ form.category.id_for_label }}">Category:</label>
+          {{ form.category }} {% if form.category.errors %}
+          <div class="error">{{ form.category.errors }}</div>
+          {% endif %}
+        </div>
 
-      <!-- Fee -->
-      <div class="form-group">
-        <label for="{{ form.fee.id_for_label }}">Fee (£):</label>
-        {{ form.fee }} {% if form.fee.errors %}
-        <div class="error">{{ form.fee.errors }}</div>
-        {% endif %}
-      </div>
+        <!-- Fee -->
+        <div class="form-group">
+          <label for="{{ form.fee.id_for_label }}">Fee (£):</label>
+          {{ form.fee }} {% if form.fee.errors %}
+          <div class="error">{{ form.fee.errors }}</div>
+          {% endif %}
+        </div>
 
-      <!-- Max Participants -->
-      <div class="form-group">
-        <label for="{{ form.max_participants.id_for_label }}"
-          >Max Participants:</label
-        >
-        {{ form.max_participants }} {% if form.max_participants.errors %}
-        <div class="error">{{ form.max_participants.errors }}</div>
-        {% endif %}
-      </div>
+        <!-- Max Participants -->
+        <div class="form-group">
+          <label for="{{ form.max_participants.id_for_label }}"
+            >Max Participants:</label
+          >
+          {{ form.max_participants }} {% if form.max_participants.errors %}
+          <div class="error">{{ form.max_participants.errors }}</div>
+          {% endif %}
+        </div>
 
-      {% block buttons %}
-      {% endblock %}
-    </form>
+        {% block buttons %} {% endblock %}
+      </form>
+    </div>
 
     <!-- Google Maps API for Autocomplete -->
-    <script 
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwkTOGVWTbNUcU7FFCLbQCUaeNrwCXM2k&loading=async&libraries=places&callback=initAutocomplete&language=en" async defer></script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwkTOGVWTbNUcU7FFCLbQCUaeNrwCXM2k&loading=async&libraries=places&callback=initAutocomplete&language=en"
+      async
+      defer
+    ></script>
     <script src="{% static 'js/google_map.js' %}"></script>
   </body>
 </html>

@@ -7,7 +7,7 @@ from django.urls import reverse
 class MyUser(AbstractUser):
     email = models.EmailField(unique=True)
     bio = models.TextField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='profile_pictures/', default='profile_pictures/default_avatar.png')
+    profile_picture = models.ImageField(upload_to='profile_pictures', default='profile_pictures/default_avatar.png', blank=True, null=True)
     city = models.CharField(max_length=100, null=True, blank=True)
     hobbies = models.CharField(max_length=255, blank=True)
     saved_events = models.ManyToManyField('Event', related_name='saved_by_users', blank=True)

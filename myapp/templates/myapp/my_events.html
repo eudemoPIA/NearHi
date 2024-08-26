@@ -1,47 +1,71 @@
-{% extends 'base_layout.html' %}
-{% load static %}
-
-{% block content %}
-<p class="greeting-message">Dear {{ request.user.username }}, here are the events you have created:</p>
+{% extends 'base_layout.html' %} {% load static %} {% block content %}
+<p class="greeting-message">
+  Dear {{ request.user.username }}, here are the events you have created:
+</p>
 
 {% block event_list %}
 <div id="event-list-section" class="event-list">
-    {% for event in page_obj %}
-    <div class="event-card" id="event-card-{{ event.id }}">
-        <a href="{{ event.get_absolute_url }}">
-            <img src="{{ event.image.url }}" alt="{{ event.title }}">
-            <h3>{{ event.title }}</h3>
-            <p>{{ event.event_time|date:"F j, Y, g:i a" }}</p>
-            <p>{{ event.location }}</p>
-            <p>{{ event.current_participants }} participants</p>
-            </a>
-        <div class="event-actions">
-            <a href="{% url 'edit_event' event.id %}" class="edit-action-btn">Edit</a>
-            <button class="action-btn" data-action-type="delete-event" data-event-id="{{ event.id }}">Delete</button>
-        </div>
+  {% for event in page_obj %}
+  <div class="event-card" id="event-card-{{ event.id }}">
+    <a href="{{ event.get_absolute_url }}">
+      <img src="{{ event.image.url }}" alt="{{ event.title }}" />
+      <h3>{{ event.title }}</h3>
+      <p>{{ event.event_time|date:"F j, Y, g:i a" }}</p>
+      <p>{{ event.location }}</p>
+      <p>{{ event.current_participants }} participants</p>
+    </a>
+    <div class="event-actions">
+      <a href="{% url 'edit_event' event.id %}" class="edit-action-btn">Edit</a>
+      <button
+        class="action-btn delete"
+        data-action-type="delete-event"
+        data-event-id="{{ event.id }}"
+      >
+        Delete
+      </button>
     </div>
-    {% endfor %}
+  </div>
+  {% endfor %}
 </div>
-{% endblock event_list %}
+{% endblock event_list %} {% block pagination %} {{ block.super }} {% endblock pagination %}
 
-{% block pagination %}
-{{ block.super }} 
-{% endblock pagination %}
-
-<div id="confirmationModal" style="display: none;">
-    <div style="background: rgba(0,0,0,0.5); position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
-        <div style="background: white; padding: 20px; border-radius: 5px; width: 400px;">
-            <h5>Confirm Action</h5>
-            <p>Are you sure you want to proceed with this action?</p>
-            <div style="text-align: right;">
-                <button id="closeModal" style="margin-right: 10px;">Cancel</button>
-                <button id="confirmAction" style="background: #007bff; color: white; padding: 5px 10px; border: none; border-radius: 3px;">Confirm</button>
-            </div>
-        </div>
+<div id="confirmationModal" style="display: none">
+  <div
+    style="
+      background: rgba(0, 0, 0, 0.5);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    "
+  >
+    <div
+      style="background: white; padding: 20px; border-radius: 5px; width: 400px"
+    >
+      <h5>Confirm Action</h5>
+      <p>Are you sure you want to proceed with this action?</p>
+      <div style="text-align: right">
+        <button id="closeModal" style="margin-right: 10px">Cancel</button>
+        <button
+          id="confirmAction"
+          style="
+            background: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+          "
+        >
+          Confirm
+        </button>
+      </div>
     </div>
+  </div>
 </div>
-{% endblock content %}
-
-{% block extra_js %}
+{% endblock content %} {% block extra_js %}
 <script src="{% static 'js/action.js' %}"></script>
-{% endblock %}
+{% endblock extra_js %}

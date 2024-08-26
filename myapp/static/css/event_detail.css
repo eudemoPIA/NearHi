@@ -90,3 +90,16 @@ body {
 #apply-button:hover {
     background-color: #cc3d00;
 }
+
+a.btn-back {
+    position: fixed; /* 将按钮固定在页面右下角 */
+    top: 20px;
+    right: 108px !important;
+    border: 1px solid #e8be98;
+    text-decoration: none;
+    background: #ffb24e;
+    color: #fff;
+    border-radius: 5px;
+    padding: 11px;
+    right: 15px;
+}
