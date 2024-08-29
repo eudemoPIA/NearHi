@@ -17,13 +17,14 @@
   <!-- Name and Picture -->
   <div class="profile-header" style="text-align: center">
     <img
-      src="{{ user.profile_picture.url|default:"/media/profile_pictures/default_avatar.png" }}"
+      src="{{ user.profile_picture.url|default:'/media/profile_pictures/default_avatar.png' }}"
       alt="Profile Picture"
       class="profile-image"
       style="border-radius: 50%; width: 150px; height: 150px"
     />
     <h2>{{ user.username }}</h2>
   </div>
+  
 
   <!-- Information -->
   <div class="profile-details">
@@ -45,13 +46,40 @@
     <div class="alert alert-danger">{{ form.non_field_errors }}</div>
     {% endif %}
 
+    <input type="hidden" name="remove_avatar" id="remove_avatar_field" value="false">
+
+    <div class="profile-picture-container">
+      <label for="profile-picture-input" class="profile-picture-label">
+          <img
+              src="{{ user.profile_picture.url|default:'/media/profile_pictures/default_avatar.png' }}"
+              alt="Profile Picture"
+              class="profile-image"
+          />
+      </label>
+      <input
+          type="file"
+          id="profile-picture-input"
+          name="profile_picture"
+          accept="image/*"
+          style="display: none;"
+      />
+      {% if form.profile_picture.errors %}
+      <div class="alert alert-danger">{{ form.city.errors }}</div>
+      {% endif %}
+    </div>
+
+    <div class="button-container">
+      <button type="button" id="remove-avatar" class="btn btn-danger">Remove</button>
+      <label for="profile-picture-input" class="edit-icon">Change</label>
+    </div>
+
     <div class="form-group">
       <label for="id_city">City:</label>
       <input
         type="text"
         class="location-input"
         name="city"
-        placeholder="Enter your city"
+        placeholder="Pick your city"
         value="{{ user.city|default:'' }}"
         data-autocomplete-type="city"
       />
@@ -90,3 +118,5 @@
   defer
 ></script>
 <script src="{% static 'js/google_map.js' %}"></script>
+<script src="{% static 'js/change_avatar.js' %}"></script>
+

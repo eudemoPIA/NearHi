@@ -38,7 +38,7 @@ body {
 }
 
 #favorite-button i {
-    color: #ff5a5f; /* 红色爱心 */
+    color: #ff5a5f; 
 }
 
 #back-to-homepage {
@@ -92,7 +92,7 @@ body {
 }
 
 a.btn-back {
-    position: fixed; /* 将按钮固定在页面右下角 */
+    position: fixed;
     top: 20px;
     right: 108px !important;
     border: 1px solid #e8be98;
@@ -102,4 +102,54 @@ a.btn-back {
     border-radius: 5px;
     padding: 11px;
     right: 15px;
+}
+
+/* ===== Responsive Media Queries ===== */
+@media (max-width: 768px) {
+    .event-detail-container {
+        padding: 15px; 
+        margin: 15px auto; 
+    }
+
+    .image-container img {
+        max-height: 250px; 
+    }
+
+    #favorite-button {
+        font-size: 20px;
+        top: 10px;
+        right: 10px;
+    }
+
+    #back-to-homepage {
+        padding: 8px 12px; 
+        font-size: 12px; 
+        top: 10px;
+        left: 10px;
+    }
+
+    .event-info h1 {
+        font-size: 24px; 
+        margin-bottom: 15px;
+    }
+
+    .event-info p {
+        font-size: 14px; 
+        line-height: 1.4;
+    }
+
+    .apply-container {
+        margin-top: 20px; 
+    }
+
+    #apply-button {
+        padding: 8px 15px; 
+        font-size: 16px; 
+    }
+
+    a.btn-back {
+        padding: 8px 10px; 
+        font-size: 12px;
+        right: 85px !important; 
+    }
 }

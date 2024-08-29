@@ -1,3 +1,16 @@
+/*
+apply and save functions on event_detail page
+*/
+
+// if not autheticated, redirected to the login page
+function handleResponse(response) {
+    if (response.redirected) { 
+        window.location.href = response.url; 
+        return;
+    }
+    return response.json();
+}
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -14,6 +27,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
+//the empty heart become solid when toggle the favorite button
 function toggleFavorite(eventId) {  // the red heart for save event
     fetch(`/events/save/${eventId}/`, {
         method: 'POST',
@@ -21,7 +35,7 @@ function toggleFavorite(eventId) {  // the red heart for save event
             'X-CSRFToken': getCookie('csrftoken'),
         }
     })
-    .then(response => response.json())
+    .then(handleResponse)
     .then(data => {
         const heartIcon = document.querySelector('#favorite-button i');
         if (data.is_favorite) {
@@ -34,10 +48,10 @@ function toggleFavorite(eventId) {  // the red heart for save event
     });
 }
 
+//apply for some event with the increase of current participant increase and turning to 'Applied'
 function applyEvent(eventId) {
-    // 获取按钮和参与人数的元素
     const applyButton = document.querySelector('#apply-button');
-    const participantCountElement = document.querySelector('.current-participants');
+    const participantCountElement = document.querySelector('#participant-count');
 
     applyButton.addEventListener('click', function() {
         fetch(`/events/${eventId}/apply/`, {
@@ -47,10 +61,9 @@ function applyEvent(eventId) {
                 'Content-Type': 'application/json',
             }
         })
-        .then(response => response.json())
+        .then(handleResponse)
         .then(data => {
-            // 动态更新参与人数和按钮状态
-            participantCountElement.textContent = `Current Participants: ${data.current_participants}`;
+            participantCountElement.textContent =  data.current_participants;
             applyButton.textContent = data.applied ? 'Applied' : 'Apply';
         })
         .catch(error => console.error('Error:', error));
@@ -60,9 +73,7 @@ function applyEvent(eventId) {
 document.addEventListener('DOMContentLoaded', function() {
     const applyButton = document.querySelector('#apply-button');
     if (applyButton) {
-        // 获取页面加载时确定的 eventId
         const eventId = applyButton.dataset.eventId;
-        // 调用 applyEvent 进行事件绑定
         applyEvent(eventId);
     }
 });

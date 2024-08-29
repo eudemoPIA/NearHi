@@ -1,4 +1,4 @@
-/* 设置页面容器的整体样式 */
+/* ===== The overall layout of profile page ===== */
 .profile-container {
     width: 800px;
     margin: 0 auto;
@@ -9,7 +9,7 @@
     position: relative;
 }
 
-/* Edit button */
+/* ===== Edit button ===== */
 .profile-container .edit-btn {
     position: absolute;
     top: 20px;
@@ -23,7 +23,9 @@
     background: #ffb24e;
     color: #fff;
     border-radius: 5px;
+    cursor: pointer;
 }
+
 a{
     text-decoration: none;
     color:#Fff;
@@ -41,7 +43,7 @@ a{
     background-color: #0056b3;
 }
 
-/* 头像和名字的样式 */
+/* ===== Name and profile picture ===== */
 .profile-header {
     text-align: center;
     margin-bottom: 20px;
@@ -60,9 +62,72 @@ a{
     color: #333;
 }
 
-/* 信息展示部分 */
+.profile-picture-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 150px;  
+    height: 150px;  
+    margin: 0 auto;
+    border-radius: 50%; 
+    overflow: hidden;
+    border: 2px solid #ff5000;
+}
+
+.profile-picture-label {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    position: relative;
+}
+
+.profile-picture-label img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    width: 230px; 
+    margin-top: -10px; 
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.button-container button {
+    background-color: #dc3545;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+}
+
+.button-container .edit-icon {
+    background-color: #6c757d;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+
+
+/* ===== Info display ===== */
 .profile-details {
-    margin-top: 20px;
+    margin-top: 40px;
 }
 
 .profile-details ul {
@@ -83,7 +148,7 @@ a{
 form{
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 30px;
     border: 1px solid #edd;
     border-radius: 10px;
     padding: 20px;
@@ -107,7 +172,7 @@ form{
     line-height: 24px;
 }
 
-/* 设置响应式布局 */
+/* ==== Responsive layout ==== */
 @media (max-width: 768px) {
     .profile-container {
         width: 95%;

@@ -1,4 +1,4 @@
-/* 设置页面容器的整体样式 */
+/* Overall layout */
 .create-container {
     width: 800px;
     margin: 0 auto;
@@ -23,6 +23,7 @@
     background: #ffb24e;
     color: #fff;
     border-radius: 5px;
+    cursor: pointer;
 }
 a{
     text-decoration: none;
@@ -41,44 +42,9 @@ a{
     background-color: #0056b3;
 }
 
-/* 头像和名字的样式 */
-.profile-header {
-    text-align: center;
-    margin-bottom: 20px;
-}
 
-.profile-header img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    border: 3px solid #ff5000;
-    margin-bottom: 10px;
-}
 
-.profile-header h2 {
-    font-size: 24px;
-    color: #333;
-}
 
-/* 信息展示部分 */
-.profile-details {
-    margin-top: 20px;
-}
-
-.profile-details ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.profile-details li {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-
-.profile-details li strong {
-    font-weight: 600;
-    color: #555;
-}
 
 form{
     display: flex;
@@ -109,7 +75,9 @@ form{
 .form-group a{
     color: #5153cb;
 }
-/* 设置响应式布局 */
+
+
+/* ==== Responsive layout ==== */
 @media (max-width: 768px) {
     .create-container {
         width: 95%;
@@ -121,7 +89,27 @@ form{
         height: 120px;
     }
 
+    .profile-header h2 {
+        font-size: 20px;
+    }
+
     .profile-details li {
         font-size: 16px;
+    }
+
+    .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .form-group label {
+        width: 100%; /* Label takes full width on small screens */
+        text-align: left;
+        margin-bottom: 5px;
+    }
+
+    .form-group input, .form-group textarea {
+        width: 100%;
+        line-height: 22px;
     }
 }

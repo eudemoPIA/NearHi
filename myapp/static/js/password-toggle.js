@@ -1,3 +1,7 @@
+/*
+show the password when needed
+*/
+
 document.addEventListener('DOMContentLoaded', function () {
     const showHidePw = document.querySelectorAll('.showHidePw');
     const passwordFields = document.querySelectorAll('.password');

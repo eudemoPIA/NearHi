@@ -1,3 +1,8 @@
+/*
+use of google map api with 2 levels of detail 
+*/
+
+
 function initAutocomplete() {
     // Ensure google object is available
     if (typeof google !== 'undefined' && google.maps && google.maps.places) {

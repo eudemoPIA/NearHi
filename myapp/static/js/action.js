@@ -1,6 +1,8 @@
-console.log('action.js loaded');
+/*
+confirm popups for 'delete' in my_events, 'unfavorite' in saved_events and 'cancel application' in upcoming_events
+*/
 
-// 获取 CSRF token 的函数
+// acquire CSRF token
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -16,12 +18,12 @@ function getCookie(name) {
     return cookieValue;
 }
 
-// 关闭模态框
+// close the modal
 function closeModal() {
     document.getElementById('confirmationModal').style.display = 'none';
 }
 
-// 更新参与者数量
+// update current participants
 function updateParticipantsCount(data) {
     const participantCountElement = document.getElementById('current-participants');
     if (participantCountElement) {
@@ -31,7 +33,7 @@ function updateParticipantsCount(data) {
     }
 }
 
-// 移除事件卡片
+// remove the event card
 function removeEventCard(eventId) {
     const eventCard = document.getElementById(`event-card-${eventId}`);
     if (eventCard) {
@@ -42,17 +44,14 @@ function removeEventCard(eventId) {
     }
 }
 
-// 通用的确认弹窗函数
+// commonly used confirm popups
 function showConfirmationModal(actionType, eventId, successCallback) {
     const url = `/events/${actionType}/${eventId}/`;
 
-    // 显示模态框
     document.getElementById('confirmationModal').style.display = 'block';
 
-    // 绑定关闭按钮事件
     document.getElementById('closeModal').onclick = closeModal;
 
-    // 绑定确认按钮事件
     document.getElementById('confirmAction').onclick = function() {
         fetch(url, {
             method: 'POST',
@@ -66,9 +65,9 @@ function showConfirmationModal(actionType, eventId, successCallback) {
 
             if (data.status === 'success') {
                 console.log('Updating participants...');
-                updateParticipantsCount(data); // 直接更新参与者数量
-                successCallback(); // 执行成功后的回调
-                closeModal(); // 关闭弹窗
+                updateParticipantsCount(data);
+                successCallback();
+                closeModal();
             } else {
                 alert('An error occurred, please try again.');
             }
@@ -80,14 +79,14 @@ function showConfirmationModal(actionType, eventId, successCallback) {
     };
 }
 
-// 绑定事件逻辑，使用事件委托
+
 document.addEventListener('click', function(event) {
     if (event.target.classList.contains('action-btn')) {
         console.log('Button clicked');
         const actionType = event.target.getAttribute('data-action-type');
         const eventId = event.target.getAttribute('data-event-id');
         showConfirmationModal(actionType, eventId, function() {
-            removeEventCard(eventId); // 移除事件卡片
+            removeEventCard(eventId);
         });
     }
 });

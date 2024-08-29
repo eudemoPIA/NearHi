@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="event-detail-container">
-        <!-- 图片区域 -->
+        <!-- image -->
         <div class="image-container">
             <img src="{{ event.image.url }}" alt="Event Image">
             <button id="favorite-button" onclick="toggleFavorite({{ event.id }})">
@@ -18,7 +18,7 @@
             </button>
         </div>
 
-        <!-- 事件信息 -->
+        <!-- event info -->
         <div class="event-info">
             <h1>{{ event.title }}</h1>
             <p><strong>Time:</strong> {{ event.event_time }}</p>
@@ -27,10 +27,12 @@
             <p><strong>Description:</strong> {{ event.description }}</p>
             <p><strong>Fee:</strong> £{{ event.fee }}</p>
             <p><strong>Max Participants:</strong> {{ event.max_participants }}</p>
-            <p class="current-participants"><strong>Current Participants:</strong> {{ event.current_participants }}</p>
+            <p class="current-participants">
+            <strong>Current Participants:</strong> <span id="participant-count">{{ event.current_participants }}</span>
+            </p>
         </div>
 
-        <!-- 申请按钮 -->
+        <!-- apply button -->
         <div class="apply-container">
             <button id="apply-button" data-event-id="{{ event.id }}">
                 {% if user in event.applied_by_users.all %}
@@ -48,7 +50,6 @@
         {% csrf_token %}
     </form>
 
-    <!-- 引入 JavaScript 文件 -->
     <script src="{% static 'js/event_detail.js' %}"></script>
     <script>
         var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;

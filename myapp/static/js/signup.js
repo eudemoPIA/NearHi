@@ -1,3 +1,8 @@
+/*
+send verification code when signing up
+*/
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const sendCodeButton = document.getElementById('send-code');
     const countdownElement = document.getElementById('countdown');

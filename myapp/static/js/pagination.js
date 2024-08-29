@@ -1,3 +1,7 @@
+/*
+update the event list without reloading the whole page by pagination
+*/
+
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -23,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Binding Pagination Links
     function bindPaginationLinks() {
         document.querySelectorAll('.pagination a').forEach(function (link) {
-            link.removeEventListener('click', handlePaginationClick); // 避免重复绑定
+            link.removeEventListener('click', handlePaginationClick);
             link.addEventListener('click', handlePaginationClick);
         });
     }

@@ -95,20 +95,40 @@ def custom_logout_view(request):
     return redirect('homepage')
 
 def profile_view(request):
-    is_editing = request.GET.get('edit', False)
-    if request.method =='POST':
-        form = ProfileForm(request.POST, request.FILES,instance=request.user)
+    is_editing = request.GET.get('edit') == 'true'
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
+        
         if form.is_valid():
+            if request.POST.get('remove_avatar') == "true":
+                # delete the image when not default
+                if request.user.profile_picture and request.user.profile_picture.name != 'profile_pictures/default_avatar.png':
+                    request.user.profile_picture.delete(save=False)
+                
+                # set to default
+                request.user.profile_picture = 'profile_pictures/default_avatar.png'
+            
+            else:
+                # save the latest picture如果未选择删除头像，则保存新上传的头像
+                if 'profile_picture' in request.FILES:
+                    request.user.profile_picture = request.FILES['profile_picture']
+            
             form.save()
             return redirect('profile')
         else:
-            return render(request, 'myapp/profile.html', {'form': form, 'user': request.user, 'errors': form.errors})
+            return render(request, 'myapp/profile.html', {
+                'form': form,
+                'user': request.user,
+                'is_editing': is_editing,
+                'errors': form.errors
+            })
     else:
         form = ProfileForm(instance=request.user)
-    return render(request, 'profile.html', {
-        'form': form, 
+    return render(request, 'myapp/profile.html', {
+        'form': form,
         'user': request.user,
-        'is_editing': is_editing})
+        'is_editing': is_editing
+    })
 
 
 @login_required(login_url='login') 
