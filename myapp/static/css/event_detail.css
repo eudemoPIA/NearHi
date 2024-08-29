@@ -72,6 +72,18 @@ body {
     line-height: 1.5;
 }
 
+.event-info a {
+    text-decoration: none;
+    font-size: 16px;
+    font-style:italic;
+    font-family:'Franklin Gothic Medium';
+    transition: text-shadow 0.3s ease;
+}
+
+.event-info a:hover {
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
 .apply-container {
     text-align: center;
     margin-top: 30px;

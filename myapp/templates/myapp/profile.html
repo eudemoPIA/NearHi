@@ -3,16 +3,24 @@
 <!DOCTYPE html>
 <div class="profile-container">
   <!-- Back to homepage -->
+  {% if next_url %}
+  <div style="position: absolute; top: 10px; left: 10px">
+    <a href="{{ next_url }}" class="btn btn-secondary">Back to event</a>
+  </div>
+  {% else %}
   <div style="position: absolute; top: 10px; left: 10px">
     <a href="{% url 'homepage' %}" class="btn btn-secondary"
       >Back to homepage</a
     >
   </div>
+  {% endif %}
 
   <!-- Edit button -->
+  {% if user == request.user %}
   <div style="position: absolute; top: 10px; right: 10px">
     <a href="{% url 'profile' %}?edit=true" class="btn btn-secondary">Edit</a>
   </div>
+  {% endif %}
 
   <!-- Name and Picture -->
   <div class="profile-header" style="text-align: center">

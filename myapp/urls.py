@@ -19,6 +19,7 @@ urlpatterns = [
     path('events/<int:pk>/edit/', views.edit_event, name='edit_event'),  
     path('events/save/<int:pk>/', views.toggle_favorite, name='toggle_favorite'),  
     path('events/<int:pk>/apply/', views.apply_event, name='apply_event'),
+    path('profile/<str:username>/', views.profile_view, name='profile'),
 
     path('saved/', views.saved_events, name='saved_events'),
     path('upcoming/', views.upcoming_events, name='upcoming_events'),

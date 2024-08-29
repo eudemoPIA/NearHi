@@ -94,40 +94,44 @@ def custom_logout_view(request):
     logout(request)
     return redirect('homepage')
 
-def profile_view(request):
-    is_editing = request.GET.get('edit') == 'true'
-    if request.method == 'POST':
-        form = ProfileForm(request.POST, request.FILES, instance=request.user)
+def profile_view(request, username=None):
+    if username:
+        user = get_object_or_404(MyUser, username=username)
+    else:
+        user = request.user
+
+    is_editing = request.GET.get('edit') == 'true' and user == request.user
+    next_url = request.GET.get('next')
+    if request.method == 'POST' and user == request.user:
+        form = ProfileForm(request.POST, request.FILES, instance=user)
         
         if form.is_valid():
             if request.POST.get('remove_avatar') == "true":
-                # delete the image when not default
-                if request.user.profile_picture and request.user.profile_picture.name != 'profile_pictures/default_avatar.png':
-                    request.user.profile_picture.delete(save=False)
-                
-                # set to default
-                request.user.profile_picture = 'profile_pictures/default_avatar.png'
-            
+                if user.profile_picture and user.profile_picture.name != 'profile_pictures/default_avatar.png':
+                    user.profile_picture.delete(save=False)
+                user.profile_picture = 'profile_pictures/default_avatar.png'
             else:
-                # save the latest picture如果未选择删除头像，则保存新上传的头像
                 if 'profile_picture' in request.FILES:
-                    request.user.profile_picture = request.FILES['profile_picture']
+                    user.profile_picture = request.FILES['profile_picture']
             
             form.save()
-            return redirect('profile')
+            return redirect('profile', username=user.username)
         else:
             return render(request, 'myapp/profile.html', {
                 'form': form,
-                'user': request.user,
+                'user': user,
                 'is_editing': is_editing,
+                'next_url': next_url,
                 'errors': form.errors
             })
     else:
-        form = ProfileForm(instance=request.user)
+        form = ProfileForm(instance=user)
+    
     return render(request, 'myapp/profile.html', {
         'form': form,
-        'user': request.user,
-        'is_editing': is_editing
+        'user': user,
+        'is_editing': is_editing,
+        'next_url': next_url
     })
 
 
