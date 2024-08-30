@@ -199,7 +199,7 @@ def paginate_events(request, events_list, per_page=8):
 
 
 def homepage(request):
-    events = Event.objects.all()
+    events = Event.objects.all().order_by('-created_at')
     page_obj = paginate_events(request, events)
     return render(request, 'myapp/homepage.html', {
         'page_obj': page_obj,
@@ -207,20 +207,31 @@ def homepage(request):
 
 
 def search_results(request):
-    search_query = request.GET.get('search_query')
-    location_query = request.GET.get('location')
+    search_query = request.GET.get('search_query', '')
+    location_query = request.GET.get('location', '')
 
+    # Check if the search query matches the category or the title
     events = Event.objects.filter(
-        Q(title__icontains=search_query) & 
-        Q(location__icontains=location_query)
+        Q(title__icontains=search_query) |
+        Q(category__icontains=search_query)  # Assuming category is stored as a text field
     )
-    
+
+    # Apply location filter if provided
+    if location_query:
+        events = events.filter(location__icontains=location_query)
+
+    events = events.order_by('-created_at')
     page_obj = paginate_events(request, events)
-    return render(request, 'myapp/search_results.html', {'page_obj': page_obj})
+
+    return render(request, 'myapp/search_results.html', {
+        'page_obj': page_obj,
+        'search_query': search_query,
+        'location_query': location_query,
+    })
 
 
 def filtered_events(request, category):
-    events = Event.objects.filter(category__iexact=category)
+    events = Event.objects.filter(category__iexact=category).order_by('-created_at')
     page_obj = paginate_events(request, events)
     return render(request, 'myapp/filtered_events.html', {
         'page_obj': page_obj,
@@ -230,20 +241,20 @@ def filtered_events(request, category):
 
 @login_required(login_url='login')
 def saved_events(request):
-    saved_events = request.user.saved_events.all()
+    saved_events = request.user.saved_events.all().order_by('-created_at')
     page_obj = paginate_events(request, saved_events.all())
     return render(request, 'myapp/saved_events.html', {'page_obj': page_obj})
 
 
 @login_required(login_url='login')
 def upcoming_events(request):
-    page_obj = paginate_events(request, request.user.upcoming_events.all())
+    page_obj = paginate_events(request, request.user.upcoming_events.all().order_by('-created_at'))
     return render(request, 'myapp/upcoming_events.html', {'page_obj': page_obj})
 
 
 @login_required(login_url='login')
 def my_events(request):
-    page_obj = paginate_events(request, Event.objects.filter(created_by=request.user))
+    page_obj = paginate_events(request, Event.objects.filter(created_by=request.user).order_by('-created_at'))
     return render(request, 'myapp/my_events.html', {'page_obj': page_obj})
 
 

@@ -29,7 +29,7 @@
             type="text"
             class="search_input"
             name="search_query"
-            placeholder="Search events"
+            placeholder="Search events or category"
             value="{{ search_query }}"
             id="keyword"
           />
@@ -88,7 +88,9 @@
         </div>
         {% endfor %}
       </div>
-      {% endblock event_list %} {% block pagination %}
+      {% endblock event_list %} 
+
+      {% block pagination %}
       <div class="pagination">
         {% if page_obj.has_previous %}
         <button
@@ -110,7 +112,8 @@
         <button class="pagination-btn disabled" disabled>Next</button>
         {% endif %}
       </div>
-      {% endblock pagination%} {% endblock content%}
+      {% endblock pagination%} 
+      {% endblock content%}
     </div>
 
     <!-- browser history control and AJAX paginate-->

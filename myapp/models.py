@@ -32,6 +32,7 @@ class Event(models.Model):
     location = models.CharField(max_length=255)
     image = models.ImageField(upload_to='event_images')
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
     fee = models.DecimalField(max_digits=8, decimal_places=2, default=0.00) 
     max_participants = models.PositiveIntegerField(default=1)
     current_participants = models.PositiveIntegerField(default=0, editable=False)
