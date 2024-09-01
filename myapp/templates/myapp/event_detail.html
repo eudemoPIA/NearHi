@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="event-detail-container">
-        <!-- image -->
+        <!-- Image -->
         <div class="image-container">
             <img src="{{ event.image.url }}" alt="Event Image">
             <button id="favorite-button" onclick="toggleFavorite({{ event.id }})">
@@ -18,7 +18,7 @@
             </button>
         </div>
 
-        <!-- event info -->
+        <!-- Event Info -->
         <div class="event-info">
             <h1>{{ event.title }}</h1>
             <p><strong>Created by:</strong> 
@@ -33,11 +33,11 @@
             <p><strong>Fee:</strong> £{{ event.fee }}</p>
             <p><strong>Max Participants:</strong> {{ event.max_participants }}</p>
             <p class="current-participants">
-            <strong>Current Participants:</strong> <span id="participant-count">{{ event.current_participants }}</span>
+                <strong>Current Participants:</strong> <span id="participant-count">{{ event.current_participants }}</span>
             </p>
         </div>
 
-        <!-- apply button -->
+        <!-- Apply Button -->
         <div class="apply-container">
             <button id="apply-button" data-event-id="{{ event.id }}">
                 {% if user in event.applied_by_users.all %}
@@ -49,15 +49,63 @@
         </div>
 
         <a href="{% url 'homepage' %}" class="btn-back">Back to Homepage</a>
+
+        <!-- Comments Section -->
+        <div class="comments-section">
+            <h3>Comments</h3>
+            <ul class="comments-list">
+                {% for comment in comments %}
+                    <li class="comment-item">
+                        <div class="comment-header">
+                            <strong>{{ comment.user.username }}</strong>
+                            <small>{{ comment.created_at|date:"F j, Y, g:i a" }}</small>
+                        </div>
+                        <p>{{ comment.content }}</p>
+        
+                        <!-- Reply Button (only visible to creator) -->
+                        {% if user == event.created_by and not comment.parent %}
+                            <button class="reply-btn" data-comment-id="{{ comment.id }}">Reply</button>
+                        {% endif %}
+        
+                        <!-- Nested replies specific to this comment -->
+                        {% if comment.replies.all %}
+                            <ul class="replies-list">
+                                {% for reply in comment.replies.all %}
+                                    <li class="reply-comment">
+                                        <div class="comment-header">
+                                            <strong>{{ reply.user.username }}</strong>
+                                            <small>{{ reply.created_at|date:"F j, Y, g:i a" }}</small>
+                                        </div>
+                                        <p>{{ reply.content }}</p>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+            </ul>
+        
+            <!-- Comment Form -->
+            {% if request.user.is_authenticated %}
+                <form method="post" id="comment-form">
+                    {% csrf_token %}
+                    <textarea name="content" placeholder="Say hi and start a friendly conversation!" required></textarea>
+                    <input type="hidden" name="parent_id" id="parent_id_field"> <!-- Field to identify replies -->
+                    <button type="submit" class="btn btn-primary">Add Comment</button>
+                </form>
+            {% else %}
+                <p>Please <a href="{% url 'login' %}">log in</a> to comment.</p>
+            {% endif %}
+        </div>
     </div>
 
+    <!-- CSRF Token Form -->
     <form id="csrf-form" method="post">
         {% csrf_token %}
     </form>
 
+    <!-- JavaScript Files -->
     <script src="{% static 'js/event_detail.js' %}"></script>
-    <script>
-        var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    </script>
+    <script src="{% static 'js/comment.js' %}"></script>
 </body>
 </html>

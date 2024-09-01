@@ -55,14 +55,23 @@
         <li><a href="{%url 'create_event'%}">Create Events</a></li>
         <li><a href="{%url 'my_events'%}">My Events</a></li>
         <li><a href="{% url 'saved_events' %}">Saved Events</a></li>
-        <li>
-          <a href="{% url 'upcoming_events' %}">Upcoming Events</a>
-
-          {% if user.is_authenticated %}
-        </li>
-
+        <li><a href="{% url 'upcoming_events' %}">Upcoming Events</a></li>
+        
+        {% if user.is_authenticated %}
         <li><a href="{% url 'profile' %}">Profile</a></li>
         <li><a href="{% url 'logout' %}">Logout</a></li>
+
+        <div class="notification-icon" onclick="toggleDropdown()">
+          <i class="fa fa-bell"></i>
+          <span class="notification-dot" id="notification-dot" style="display: none;"></span>
+        </div>
+
+        <div class="notification-dropdown" id="notification-dropdown">
+          <ul class="notification-list">
+            <!-- JavaScript will dynamically insert the notifications here -->
+          </ul>
+        </div>
+
         {% else %}
         <li><a href="{% url 'login' %}">Login</a></li>
         <li><a href="{% url 'signup' %}">Sign Up</a></li>
@@ -116,6 +125,7 @@
       {% endblock content%}
     </div>
 
+    <input type="hidden" id="csrf-token" value="{{ csrf_token }}" />
     <!-- browser history control and AJAX paginate-->
     <script src="{% static 'js/pagination.js' %}"></script>
 
@@ -140,5 +150,7 @@
       defer
     ></script>
     <script src="{% static 'js/google_map.js' %}"></script>
+    <script src="{% static 'js/comment.js' %}"></script>
+    <script src="{% static 'js/notification.js' %}"></script>    
   </body>
 </html>

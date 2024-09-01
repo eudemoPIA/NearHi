@@ -50,6 +50,7 @@ function toggleFavorite(eventId) {  // the red heart for save event
 
 //apply for some event with the increase of current participant increase and turning to 'Applied'
 function applyEvent(eventId) {
+    const csrfToken = getCookie('csrftoken');  
     const applyButton = document.querySelector('#apply-button');
     const participantCountElement = document.querySelector('#participant-count');
 
@@ -57,7 +58,7 @@ function applyEvent(eventId) {
         fetch(`/events/${eventId}/apply/`, {
             method: 'POST',
             headers: {
-                'X-CSRFToken': csrftoken,
+                'X-CSRFToken': csrfToken,
                 'Content-Type': 'application/json',
             }
         })

@@ -116,6 +116,131 @@ a.btn-back {
     right: 15px;
 }
 
+/* ===== Comment section ===== */
+/* General Comments Section Styling */
+.comments-section {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+/* Main Comments List */
+.comments-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Individual Comment Styling */
+.comment-item {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Comment Header for Username and Date */
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.comment-header strong {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Reply Button Styling */
+.reply-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.reply-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Replies List Nested Under Each Comment */
+.replies-list {
+    margin-left: 20px; /* 缩进 */
+    border-left: 2px solid #ddd; /* 辅助区分 */
+    padding-left: 20px; /* Indentation for replies */
+    list-style: none;
+    margin-top: 10px;
+}
+
+/* Individual Reply Comment Styling */
+.reply-comment {
+    margin-left: 20px;
+    border-left: 2px solid #ccc;
+    padding-left: 10px;
+    background-color: #f9f9f9; /* Slight background change for replies */
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+/* Text Area and Comment Form Styling */
+#comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#comment-form textarea {
+    resize: vertical;
+    min-height: 50px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+#comment-form button {
+    align-self: flex-start;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+#comment-form button:hover {
+    background-color: #218838;
+}
+
+/* Styling for Empty State of Comments */
+.comments-list li:empty {
+    color: #999;
+    text-align: center;
+    padding: 10px 0;
+}
+
+/* Styling for Comments and Replies Text */
+.comment-item p, .reply-comment p {
+    margin: 5px 0;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #333;
+}
+
+.comment-item small, .reply-comment small {
+    font-size: 12px;
+    color: #888;
+}
+
 /* ===== Responsive Media Queries ===== */
 @media (max-width: 768px) {
     .event-detail-container {

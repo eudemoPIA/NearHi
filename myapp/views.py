@@ -5,13 +5,15 @@ from django.contrib import messages
 from django.db.models import Q
 from django.urls import reverse
 from .forms import LoginForm, SignUpForm, EventForm, ProfileForm
-from .models import MyUser, Event
+from .models import MyUser, Event, Comment, Notification
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.http import JsonResponse
 import random
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator,  PageNotAnInteger, EmptyPage
+from .models import Notification
 
 
 def login_view(request):
@@ -151,8 +153,13 @@ def create_event(request):
 
 def event_detail(request, pk):
     event = get_object_or_404(Event, pk=pk)
-    is_favorite = request.user in event.saved_by_users.all()
-    return render(request, 'myapp/event_detail.html', {'event': event, 'is_favorite': is_favorite})
+    comments = Comment.objects.filter(event=event, parent__isnull=True).order_by('-created_at').prefetch_related('replies')
+    context = {
+        'event': event,
+        'comments': comments,
+        'is_favorite': event.saved_by_users.filter(id=request.user.id).exists() if request.user.is_authenticated else False,
+    }
+    return render(request, 'myapp/event_detail.html', context)
 
 
 @login_required(login_url='login')
@@ -298,4 +305,77 @@ def cancel_application(request, event_id):
         request.user.upcoming_events.remove(event)
         return JsonResponse({'status': 'success', 'current_participants': event.current_participants})
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
+
+#Comment and notification
+def post_comment(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        if content:
+            is_creator_reply = request.user == event.created_by
+            Comment.objects.create(
+                event=event, 
+                user=request.user, 
+                content=content, 
+                is_creator_reply=is_creator_reply
+            )
+    return redirect('event_detail', event_id=event_id)
+
+def add_comment(request, event_id):
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        parent_id = request.POST.get('parent_id')  # 获取父评论的ID
+        
+        if not content:
+            return JsonResponse({'status': 'error', 'message': 'Content cannot be empty'}, status=400)
+
+        event = get_object_or_404(Event, id=event_id)
+        parent_comment = Comment.objects.filter(id=parent_id).first() if parent_id else None
+
+        # 限制creator只能回复其他用户的评论
+        if parent_comment and parent_comment.user == request.user:
+            return JsonResponse({'status': 'error', 'message': 'Cannot reply to your own comment'}, status=400)
+
+        # 创建并保存评论对象
+        comment = Comment.objects.create(
+            event=event,
+            user=request.user,
+            content=content,
+            parent=parent_comment
+        )
+
+        return JsonResponse({
+            'status': 'success',
+            'comment': comment.content,
+            'user': comment.user.username,
+            'created_at': comment.created_at.strftime('%B %d, %Y, %I:%M %p'),
+            'is_reply': bool(parent_comment)
+        })
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+
+@require_POST
+def mark_notification_as_read(request, notification_id):
+    notification = get_object_or_404(Notification, pk=notification_id, recipient=request.user)
+    notification.read = True
+    notification.save()
+    return JsonResponse({'success': 'Notification marked as read'})
+
+def get_notifications(request):
+    notifications = request.user.notifications.filter(read=False)
+    data = [{
+        'id': n.id,
+        'message': n.message,
+        'url': n.event.get_absolute_url(),
+    } for n in notifications]
+
+    unread_count = request.user.notifications.filter(read=False).count()
+
+    response_data = {
+        'notifications': data,
+        'unread_count': unread_count
+    }
+
+    return JsonResponse(response_data)
 

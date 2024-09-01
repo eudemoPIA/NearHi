@@ -41,6 +41,54 @@ a:hover{
     color:rgb(202, 157, 161)
 }
 
+.notification-dropdown {
+    /*display: none;  Default hidden state */
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    width: 200px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 100; /* Ensure the dropdown is on top of other elements */
+}
+
+.notification-icon {
+    cursor: pointer; 
+    color: white; 
+}
+
+.notification-icon:hover {
+    color:rgb(202, 157, 161)
+}
+
+a.notification-link {
+    cursor:pointer;
+    color:#333;
+}
+
+a.notification-link:hover {
+    color:#888;
+}
+
+.notification-icon {
+    position: relative; 
+    display: inline-block;
+}
+
+.notification-dot {
+    display: none; 
+    width: 8px; 
+    height: 8px; 
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%; 
+    right: 50%; 
+    transform: translate(50%, -50%); 
+    box-shadow: 0 0 5px #ff0000;
+}
+
+
 /* add a color to current link */
 .nav-links {
     background: #ff5000;
