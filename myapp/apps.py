@@ -6,4 +6,4 @@ class MyappConfig(AppConfig):
     name = 'myapp'
 
     def ready(self):
-        import myapp.signals  # 引入信号处理
+        import myapp.signals

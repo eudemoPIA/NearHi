@@ -12,7 +12,7 @@ a:hover{
     justify-content: space-between;
     align-items: center;
     background-color :white;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 
@@ -42,14 +42,27 @@ a:hover{
 }
 
 .notification-dropdown {
-    /*display: none;  Default hidden state */
     position: absolute;
     background: white;
     border: 1px solid #ddd;
     width: 200px;
     max-height: 300px;
     overflow-y: auto;
-    z-index: 100; /* Ensure the dropdown is on top of other elements */
+    z-index: 100;
+    right: -69px;
+    top: 33px;
+    background: #ffffff;
+    z-index: 9999999;
+    /* display: flex; */
+    box-shadow: 0px 0px 7px #dbdbdb;
+    padding: 10px;
+}
+.notification-item a{
+    color: #000 !important;
+}
+.notification-item a:hover{
+    color: #f77f34 !important;
+
 }
 
 .notification-icon {

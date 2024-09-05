@@ -9,7 +9,6 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
-    
   </head>
   <body>
     {% block nav_bar %}
@@ -56,20 +55,27 @@
         <li><a href="{%url 'my_events'%}">My Events</a></li>
         <li><a href="{% url 'saved_events' %}">Saved Events</a></li>
         <li><a href="{% url 'upcoming_events' %}">Upcoming Events</a></li>
-        
+
         {% if user.is_authenticated %}
         <li><a href="{% url 'profile' %}">Profile</a></li>
         <li><a href="{% url 'logout' %}">Logout</a></li>
 
-        <div class="notification-icon" onclick="toggleDropdown()">
+        <div
+          class="notification-icon"
+          onclick="toggleDropdown()"
+          style="position: relative"
+        >
           <i class="fa fa-bell"></i>
-          <span class="notification-dot" id="notification-dot" style="display: none;"></span>
-        </div>
-
-        <div class="notification-dropdown" id="notification-dropdown">
-          <ul class="notification-list">
-            <!-- JavaScript will dynamically insert the notifications here -->
-          </ul>
+          <span
+            class="notification-dot"
+            id="notification-dot"
+            style="display: none"
+          ></span>
+          <div class="notification-dropdown" id="notification-dropdown">
+            <ul class="notification-list">
+              <!-- JavaScript will dynamically insert the notifications here -->
+            </ul>
+          </div>
         </div>
 
         {% else %}
@@ -97,9 +103,7 @@
         </div>
         {% endfor %}
       </div>
-      {% endblock event_list %} 
-
-      {% block pagination %}
+      {% endblock event_list %} {% block pagination %}
       <div class="pagination">
         {% if page_obj.has_previous %}
         <button
@@ -121,8 +125,7 @@
         <button class="pagination-btn disabled" disabled>Next</button>
         {% endif %}
       </div>
-      {% endblock pagination%} 
-      {% endblock content%}
+      {% endblock pagination%} {% endblock content%}
     </div>
 
     <input type="hidden" id="csrf-token" value="{{ csrf_token }}" />
@@ -151,6 +154,6 @@
     ></script>
     <script src="{% static 'js/google_map.js' %}"></script>
     <script src="{% static 'js/comment.js' %}"></script>
-    <script src="{% static 'js/notification.js' %}"></script>    
+    <script src="{% static 'js/notification.js' %}"></script>
   </body>
 </html>

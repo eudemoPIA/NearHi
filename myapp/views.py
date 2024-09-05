@@ -325,7 +325,7 @@ def post_comment(request, event_id):
 def add_comment(request, event_id):
     if request.method == 'POST':
         content = request.POST.get('content')
-        parent_id = request.POST.get('parent_id')  # 获取父评论的ID
+        parent_id = request.POST.get('parent_id')
         
         if not content:
             return JsonResponse({'status': 'error', 'message': 'Content cannot be empty'}, status=400)
@@ -333,11 +333,9 @@ def add_comment(request, event_id):
         event = get_object_or_404(Event, id=event_id)
         parent_comment = Comment.objects.filter(id=parent_id).first() if parent_id else None
 
-        # 限制creator只能回复其他用户的评论
         if parent_comment and parent_comment.user == request.user:
             return JsonResponse({'status': 'error', 'message': 'Cannot reply to your own comment'}, status=400)
 
-        # 创建并保存评论对象
         comment = Comment.objects.create(
             event=event,
             user=request.user,

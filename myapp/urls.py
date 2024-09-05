@@ -29,7 +29,7 @@ urlpatterns = [
     path('events/cancel-collection/<int:event_id>/', views.cancel_collection, name='cancel_collection'),
     path('events/cancel-application/<int:event_id>/', views.cancel_application, name='cancel_application'),
 
-    path('events/<int:event_id>/add_comment/', views.add_comment, name='add_comment'),  # Comment submission
+    path('events/<int:event_id>/add_comment/', views.add_comment, name='add_comment'),
     path('notifications/', views.get_notifications, name='get_notifications'),
     path('mark_notification_as_read/<int:notification_id>/', views.mark_notification_as_read, name='mark_notification_as_read'),
     ]

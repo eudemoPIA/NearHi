@@ -52,7 +52,7 @@ class EventForm(forms.ModelForm):
     def clean_image(self):
         image = self.cleaned_data.get('image')
         if not image:
-            raise forms.ValidationError('Please upload the image of the event！')
+            raise forms.ValidationError('Please upload the image of the event!')
         return image
 
 class ProfileForm(forms.ModelForm):
