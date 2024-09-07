@@ -23,6 +23,15 @@ function closeModal() {
     document.getElementById('confirmationModal').style.display = 'none';
 }
 
+// update current participants
+function updateParticipantsCount(data) {
+    const participantCountElement = document.getElementById('current-participants');
+    if (participantCountElement) {
+        participantCountElement.innerText = `${data.current_participants} participants`;
+    } else {
+        console.error('Element not found: participantCount');
+    }
+}
 
 
 // remove the event card
