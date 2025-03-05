@@ -54,7 +54,7 @@
         <li><a href="{%url 'create_event'%}">Create Events</a></li>
         <li><a href="{%url 'my_events'%}">My Events</a></li>
         <li><a href="{% url 'saved_events' %}">Saved Events</a></li>
-        <li><a href="{% url 'upcoming_events' %}">Upcoming Events</a></li>
+        <li><a href="{% url 'upcoming_events' %}">Applied Events</a></li>
 
         {% if user.is_authenticated %}
         <li><a href="{% url 'profile' %}">Profile</a></li>
